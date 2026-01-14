@@ -73,7 +73,7 @@ class DevFlowTestRunner:
         "ak-stage-prompt",
         "button[type='submit']"
         ],
-        
+        "menu_projects": "//div[@role='listitem' and contains(., 'Projects')]",
         "menu_teams": "//div[@role='listitem' and contains(., 'Teams')]",
         "ahthentik_sso_btn": "//button[contains(., 'SSO')]",
         "login_main_email": "//input[@type='text' or @type='email']",
@@ -535,8 +535,28 @@ class DevFlowTestRunner:
                 self.driver.delete_all_cookies()
                 self.driver.execute_script("window.localStorage.clear();")
 
-
-
+    def tc_10_project(self):
+        print("프로젝트 관리 테스트")
+        self.driver.get(self.base_url)
+        time.sleep(1)
+        self._shadow_fill('login_main_email', self.existing_email)
+        self._shadow_fill('login_main_password', self.existing_password)
+        self._shadow_click('login_main_submit')
+        print("대시보드 도달 확인")
+        time.sleep(1)
+        print("사이드바에서 'Projects' 메뉴 클릭")
+        self._shadow_click("menu_projects")
+        time.sleep(1)
+        print("'New Project' 버튼 클릭")
+        new_project_span = self.driver.find_element(By.XPATH, "//span[contains(text(), 'New Project')]")
+        new_project_span.click()
+        time.sleep(1)
+        if "Cancel" in self.driver.page_source:
+            print("✅ Pass")
+        else:
+            print("❌ Fail")
+        self.driver.delete_all_cookies()
+        self.driver.execute_script("window.localStorage.clear();")
 
         
 
@@ -557,6 +577,7 @@ if __name__ == "__main__":
         "tc_07_teams",
         "tc_08_teamfeild",
         "tc_09_teamcheck",
+        "tc_10_project",
 
     ]
 
