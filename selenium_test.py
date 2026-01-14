@@ -385,7 +385,7 @@ class DevFlowTestRunner:
             print("👉 5. 'updated successfully' 메시지 확인 중...")
             time.sleep(1)
             # 화면 전체에서 해당 텍스트가 떴는지 찾습니다. (토스트 메시지 감지)
-            body_text = self.driver.find_element(By.TAG_NAME, "body").text
+            body_text = self.driver.find_element(By.TAG_NAME, "body").text # <body> 전체 텍스트
 
             time.sleep(1)
             if "updated successfully" in body_text:
@@ -468,9 +468,74 @@ class DevFlowTestRunner:
             print(f"✅ Pass: {team_name}")
         else:
             print(f"❌ Fail: {team_name} 없음")
-
+        
         self.driver.delete_all_cookies()
         self.driver.execute_script("window.localStorage.clear();")
+
+    def tc_09_teamcheck(self):
+        print("\n[TC-09] 팀 생성 데이터 연동 테스트")
+        self.driver.get(self.base_url)
+        time.sleep(1)
+        team_name = f"{self.fake.color_name()} 프로젝트"
+        self._shadow_fill('login_main_email', self.existing_email)
+        self._shadow_fill('login_main_password', self.existing_password)
+        self._shadow_click('login_main_submit')
+        print("대시보드 도달 확인")
+        time.sleep(1)
+        print("사이드바에서 'Teams' 메뉴 클릭")
+        self._shadow_click("menu_teams")
+        time.sleep(1) 
+
+        print("'new Team' 버튼 클릭")
+        new_team_span = self.driver.find_element(By.XPATH, "//span[contains(text(), 'New Team')]")
+        new_team_span.click()
+        time.sleep(1)
+        print("팀 이름 입력")
+        team_name_input = self.driver.find_element(By.XPATH, "//input[@aria-label='Team Name *']")
+        team_name_input.send_keys(team_name)
+        target_member = "test123"
+        print("팀 멤버 검색시도: {test123}")
+        self.driver.find_element(By.XPATH, "//input[@aria-label='Select Initial Members']")
+        self._shadow_fill("//input[@aria-label='Select Initial Members']", target_member)
+        time.sleep(1)
+        try:
+            self._click(f"//div[@role='listbox']//div[contains(text(), '{target_member}')]")
+            print("맴버선택완료")
+        except:
+            print("맴버선택실패")
+            self._click("//span[contains(text(), 'Create')]")
+        time.sleep(1)
+        print("팀 생성 버튼 클릭")
+        self._click("//span[contains(text(), 'Create')]")
+        time.sleep(5)
+        try:
+            # ==========================================================
+            print("👉 1. 상단 계정 아이콘 클릭")
+    
+            avatar_selector = ".q-avatar" 
+            avatar_btn = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, avatar_selector)))
+            avatar_btn.click()
+            time.sleep(1) # 메뉴가 펼쳐질 때까지 잠시 대기
+
+            print("👉 2. 메뉴에서 Profile 클릭")
+            
+            menu_text = "Profile"
+            profile_menu = self.driver.find_element(By.XPATH, f"//div[contains(text(), '{menu_text}')]")
+            profile_menu.click()
+            time.sleep(1) # 페이지 이동 대기
+
+
+            if team_name in self.driver.page_source:
+                print(f"✅ Pass: 프로필 페이지에 팀명이 보입니다: {team_name}")
+            else:
+                print(f"❌ Fail: 프로필 페이지에 팀명이 보이지 않습니다: {team_name}")
+        except Exception as e:
+                print(f"❌ 에러 발생: {e}")
+
+                self.driver.delete_all_cookies()
+                self.driver.execute_script("window.localStorage.clear();")
+
+
 
 
         
@@ -491,6 +556,8 @@ if __name__ == "__main__":
         "tc_06_profile",
         "tc_07_teams",
         "tc_08_teamfeild",
+        "tc_09_teamcheck",
+
     ]
 
     try:
