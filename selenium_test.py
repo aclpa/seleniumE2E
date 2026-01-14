@@ -181,16 +181,6 @@ class DevFlowTestRunner:
     # =================================================================
     # ======================== 테스트 케이스들 =========================
 
-    def tc_00_templogin(self):
-        print("\n[TC-00] 메뉴진입 임시 로그인")
-        self.driver.get(self.base_url)
-        time.sleep(1)
-        self._shadow_fill('login_main_email', "test123qwer@test.com")
-        self._shadow_fill('login_main_password', "Test123qwera")
-        self._shadow_click('login_main_submit')
-        self.driver.delete_all_cookies()
-        print("쿠키 삭제됨")
-
     def tc_01_authentik(self):
         print("[TC-01] 회원가입 테스트")
         print("localhost:8080 페이지 이동")
@@ -436,13 +426,12 @@ if __name__ == "__main__":
     runner = DevFlowTestRunner()
     
     target_tcs = [
-        #"tc_00_templogin",
-        #"tc_01_authentik",
-        #"tc_02_signup",
-        #"tc_03_signup_duplicate",
-        #"tc_04_password_fail",
-        #"tc_05_login",
-        #"tc_06_profile",
+        "tc_01_authentik",
+        "tc_02_signup",
+        "tc_03_signup_duplicate",
+        "tc_04_password_fail",
+        "tc_05_login",
+        "tc_06_profile",
         "tc_07_teams",
     ]
 
