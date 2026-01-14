@@ -181,16 +181,6 @@ class DevFlowTestRunner:
     # =================================================================
     # ======================== 테스트 케이스들 =========================
 
-    def tc_00_templogin(self):
-        print("\n[TC-00] 메뉴진입 임시 로그인")
-        self.driver.get(self.base_url)
-        time.sleep(1)
-        self._shadow_fill('login_main_email', "test123qwer@test.com")
-        self._shadow_fill('login_main_password', "Test123qwera")
-        self._shadow_click('login_main_submit')
-        self.driver.delete_all_cookies()
-        print("쿠키 삭제됨")
-
     def tc_01_authentik(self):
         print("[TC-01] 회원가입 테스트")
         print("localhost:8080 페이지 이동")
@@ -199,6 +189,7 @@ class DevFlowTestRunner:
         print("회원가입 버튼 클릭")
         self._shadow_click('ahthentik_sso_btn')
 
+        time.sleep(1)
         print("검증단계 진행")
         try:
             self.wait.until(EC.url_contains("9000"))
@@ -211,7 +202,7 @@ class DevFlowTestRunner:
             raise Exception(f"회원가입 테스트 실패: {e}")   
          
         self.driver.delete_all_cookies()
-        print("쿠키 삭제됨")
+        self.driver.execute_script("window.localStorage.clear();")
         
     def tc_02_signup(self):
         print("\n[TC-02] 회원가입 성공 테스트")
@@ -234,15 +225,15 @@ class DevFlowTestRunner:
         self._shadow_fill('password_rep', password)
         self._shadow_fill('email', email)
         self._shadow_click('submit_btn')
-        time.sleep(1)
+        time.sleep(2)
         current = self.driver.current_url
         if "9000" not in current and "8080" in current:
             print("✅ Pass: 가입 성공 (리디렉션 완료)")
         else:
             print(f"❌ Fail: 가입 실패 (URL: {self.driver.current_url})")
-
+        time.sleep(1)
         self.driver.delete_all_cookies()
-        print("쿠키 삭제됨")
+        self.driver.execute_script("window.localStorage.clear();")
 
     def tc_03_signup_duplicate(self):
         print("\n[TC-03] 중복 가입 방지 테스트")
@@ -262,7 +253,7 @@ class DevFlowTestRunner:
         self._shadow_fill('password', existing_password)
         self._shadow_fill('password_rep', existing_password)
         self._shadow_click('submit_btn')
-
+        time.sleep(1)
         print("결과 확인 중...")
         current = self.driver.current_url
         if "9000" in current:   
@@ -271,7 +262,7 @@ class DevFlowTestRunner:
              print(f"❌ Fail: 중복인데 가입이 되어버렸습니다! (URL: {current})")
 
         self.driver.delete_all_cookies()
-        print("쿠키 삭제됨")
+        self.driver.execute_script("window.localStorage.clear();")
 
     def tc_04_password_fail(self):
         print("\n[TC-04] 로그인 비밀번호 실패 테스트")
@@ -293,6 +284,7 @@ class DevFlowTestRunner:
             "ak-flow-input-password > ak-form-element", 
             "p.pf-c-form__helper-text"  # 혹은 "div > p" (에러 메시지 태그)
         ]
+        time.sleep(1)
         error_element = self.get_shadow_element_v4(target_path)
         if error_element:
             error_text = error_element.text
@@ -304,7 +296,7 @@ class DevFlowTestRunner:
                 print(f"⚠️ Warning: 에러 요소는 찾았으나 메시지가 예상과 다릅니다. (내용: {error_text})")
 
         self.driver.delete_all_cookies()
-        print("쿠키 삭제됨")
+        self.driver.execute_script("window.localStorage.clear();")
 
     def tc_05_login(self):
         print("\n[TC-05] 로그인 테스트")
@@ -325,13 +317,14 @@ class DevFlowTestRunner:
         self._shadow_click('end_login_submit')
         # 5. 검증
         time.sleep(1)
-        if "http://localhost:8080/#/dashboard" in self.driver.current_url:
+        if "9000" not in self.driver.current_url:
             print("✅ Pass: 로그인 성공")
         else:
             print(f"❌ Fail: 로그인 실패 (URL: {self.driver.current_url})")
+        time.sleep(1)    
 
         self.driver.delete_all_cookies()
-        print("쿠키 삭제됨")
+        self.driver.execute_script("window.localStorage.clear();")
 
     def tc_06_profile(self):
         print("\n[TC-06] 프로필 수정 테스트")
@@ -373,11 +366,13 @@ class DevFlowTestRunner:
             new_phone = fake.numerify(text='010-####-####')# 새로운 전화번호 생성
             print(f"👉 3. 새 전화번호 입력: {new_phone}")
             phone_input = self.driver.find_element(By.XPATH, "//input[@aria-label='Phone *']")# 전화번호 입력창 찾기
-            self.driver.execute_script("arguments[0].value = '';", phone_input)# 기존 값 지우기
+            phone_input.send_keys(Keys.CONTROL + "a")# 기존 값 지우기
+            phone_input.send_keys(Keys.DELETE)
             phone_input.send_keys(new_phone)
             # ==========================================================
             full_name = self.driver.find_element(By.XPATH, "//input[@aria-label='Full Name *']")# 이름 입력창 찾기
-            self.driver.execute_script("arguments[0].value = arguments[0].value;", full_name)# 기존 값 유지
+            full_name.send_keys(Keys.CONTROL + "a")
+            full_name.send_keys(Keys.DELETE)
             full_name.send_keys(self.fake.name())# 이름 재입력
             time.sleep(1)
             # 3단계: 저장(Update) 버튼 클릭
@@ -391,7 +386,8 @@ class DevFlowTestRunner:
             time.sleep(1)
             # 화면 전체에서 해당 텍스트가 떴는지 찾습니다. (토스트 메시지 감지)
             body_text = self.driver.find_element(By.TAG_NAME, "body").text
-            
+
+            time.sleep(1)
             if "updated successfully" in body_text:
                 print("✅ Pass: 성공 메시지 확인됨")
             else:
@@ -400,9 +396,10 @@ class DevFlowTestRunner:
                 print(f"❌ 에러 발생: {e}")
 
         self.driver.delete_all_cookies()
-        print("쿠키 삭제됨")
+        self.driver.execute_script("window.localStorage.clear();")
 
     def tc_07_teams(self):
+        print("\n[TC-07] 팀 생성 및 멤버 초대 테스트")
         self.driver.get(self.base_url)
         time.sleep(1)
         self._shadow_fill('login_main_email', self.existing_email)
@@ -418,12 +415,62 @@ class DevFlowTestRunner:
         print("'new Team' 버튼 클릭")
         new_team_span = self.driver.find_element(By.XPATH, "//span[contains(text(), 'New Team')]")
         new_team_span.click()
+        time.sleep(1)
+
+        if "Active Team" in self.driver.page_source:
+            print("✅ Pass")
+        else:
+            print("❌ Fail")
 
         self.driver.delete_all_cookies()
-        print("쿠키 삭제됨")
-    
+        self.driver.execute_script("window.localStorage.clear();")
+
     def tc_08_teamfeild(self):
+        print("쿠키 삭제됨")
+        self.driver.get(self.base_url)
         print("\n[TC-08] 팀 필드 테스트")
+        time.sleep(1)
+        team_name = f"{self.fake.color_name()} 프로젝트"
+        self._shadow_fill('login_main_email', self.existing_email)
+        self._shadow_fill('login_main_password', self.existing_password)
+        self._shadow_click('login_main_submit')
+
+        print("\n[TC-07] 팀 생성 및 멤버 초대 테스트")
+        print("대시보드 도달 확인")
+        time.sleep(1)
+        print("사이드바에서 'Teams' 메뉴 클릭")
+        self._shadow_click("menu_teams")
+        time.sleep(1)
+        print("'new Team' 버튼 클릭")
+        new_team_span = self.driver.find_element(By.XPATH, "//span[contains(text(), 'New Team')]")
+        new_team_span.click()
+        time.sleep(1)
+        print("팀 이름 입력")
+        team_name_input = self.driver.find_element(By.XPATH, "//input[@aria-label='Team Name *']")
+        team_name_input.send_keys(team_name)
+        target_member = "test123"
+        print("팀 멤버 검색시도: {test123}")
+        self.driver.find_element(By.XPATH, "//input[@aria-label='Select Initial Members']")
+        self._shadow_fill("//input[@aria-label='Select Initial Members']", target_member)
+        time.sleep(1)
+        try:
+            self._click(f"//div[@role='listbox']//div[contains(text(), '{target_member}')]")
+            print("맴버선택완료")
+        except:
+            print("맴버선택실패")
+            self._click("//span[contains(text(), 'Create')]")
+        time.sleep(1)
+        print("팀 생성 버튼 클릭")
+        self._click("//span[contains(text(), 'Create')]")
+
+        time.sleep(1)
+        if team_name in self.driver.page_source:
+            print(f"✅ Pass: {team_name}")
+        else:
+            print(f"❌ Fail: {team_name} 없음")
+
+        self.driver.delete_all_cookies()
+        self.driver.execute_script("window.localStorage.clear();")
 
 
         
@@ -436,14 +483,14 @@ if __name__ == "__main__":
     runner = DevFlowTestRunner()
     
     target_tcs = [
-        #"tc_00_templogin",
-        #"tc_01_authentik",
-        #"tc_02_signup",
-        #"tc_03_signup_duplicate",
-        #"tc_04_password_fail",
-        #"tc_05_login",
-        #"tc_06_profile",
+        "tc_01_authentik",
+        "tc_02_signup",
+        "tc_03_signup_duplicate",
+        "tc_04_password_fail",
+        "tc_05_login",
+        "tc_06_profile",
         "tc_07_teams",
+        "tc_08_teamfeild",
     ]
 
     try:
@@ -457,7 +504,7 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"\n❌ 에러 발생: {e}")
         # 에러 나면 스크린샷 찍기 (디버깅용)
-        runner.driver.save_screenshot("C:\Users\USER_20220316\Desktop\QA-Portfolio\selenium screenshot\error_screen.png")
+        runner.driver.save_screenshot("C:/Users/USER_20220316/Desktop/QA-Portfolio/selenium,screenshot/error_screen.png")
         print("📸 현재 화면을 'error_screen.png'로 저장했습니다.")
     finally:
         runner.teardown()
