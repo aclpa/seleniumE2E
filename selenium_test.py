@@ -19,7 +19,7 @@ class DevFlowTestRunner:
         options = webdriver.ChromeOptions()
         # options.add_argument("--headless")  # 화면 안 보고 싶으면 주석 해제
         # options.add_argument("--start-maximized") # 전체화면
-        self.driver = webdriver.Chrome(service=Service("./chromedriver.exe"), options=options)
+        self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
         self.wait = WebDriverWait(self.driver, 10)
         self.base_url = "http://localhost:8080"
         self.auth_paths = {
@@ -73,7 +73,8 @@ class DevFlowTestRunner:
         "ak-stage-prompt",
         "button[type='submit']"
         ],
-
+        
+        "menu_teams": "//div[@role='listitem' and contains(., 'Teams')]",
         "ahthentik_sso_btn": "//button[contains(., 'SSO')]",
         "login_main_email": "//input[@type='text' or @type='email']",
         "login_main_password":"//input[@type='password']",
@@ -86,7 +87,8 @@ class DevFlowTestRunner:
         self.dashboard_url = "http://localhost:8080/#/dashboard"
         self.fake = Faker('ko_KR')
         self.scrpit ="document.querySelector(\"body > ak-flow-executor\").shadowRoot.querySelector(\"ak-locale-context > div.pf-c-page__drawer > div > div > div > div > div > div > div > ak-stage-password\").shadowRoot.querySelector(\"div > form > ak-flow-input-password > ak-form-element\").shadowRoot.querySelector(\"div > p\")"
-
+        self.existing_email = "test123a@test.com"
+        self.existing_password = "test123qaswera"
     def teardown(self):
         """테스트 종료: 브라우저 닫기"""
         print("🛑 [Teardown] 브라우저를 닫습니다.")
@@ -182,6 +184,7 @@ class DevFlowTestRunner:
     def tc_00_templogin(self):
         print("\n[TC-00] 메뉴진입 임시 로그인")
         self.driver.get(self.base_url)
+        time.sleep(1)
         self._shadow_fill('login_main_email', "test123qwer@test.com")
         self._shadow_fill('login_main_password', "Test123qwera")
         self._shadow_click('login_main_submit')
@@ -192,7 +195,7 @@ class DevFlowTestRunner:
         print("[TC-01] 회원가입 테스트")
         print("localhost:8080 페이지 이동")
         self.driver.get(self.base_url)
-
+        time.sleep(1)
         print("회원가입 버튼 클릭")
         self._shadow_click('ahthentik_sso_btn')
 
@@ -220,6 +223,7 @@ class DevFlowTestRunner:
         print(f"생성된 계정 정보 | ID: {username} / PW: {password} / Email: {email}")
 
         self.driver.get(self.base_url)
+        time.sleep(1)
         print("로그인 버튼 클릭")
         self._shadow_click('ahthentik_sso_btn')
         self._shadow_click('submit')
@@ -243,6 +247,7 @@ class DevFlowTestRunner:
     def tc_03_signup_duplicate(self):
         print("\n[TC-03] 중복 가입 방지 테스트")
         self.driver.get(self.base_url)
+        time.sleep(1)
         print("SSO로그인 버튼 클릭")
         self._shadow_click('ahthentik_sso_btn')
         self._shadow_click('submit')
@@ -271,17 +276,15 @@ class DevFlowTestRunner:
     def tc_04_password_fail(self):
         print("\n[TC-04] 로그인 비밀번호 실패 테스트")
         self.driver.get(self.base_url)
-
+        time.sleep(1)
         print("SSO로그인 버튼 클릭")
         self._click("//button[contains(., 'SSO')]")
         
         print("잘못된 비밀번호 입력 후 로그인 시도")
-        existing_email = "test123@test.com"
-        existing_password = "test1234"
-        print(f"👉 로그인 시도: {existing_email} {existing_password}")
-        self._shadow_fill('login_email', existing_email)
+        print(f"👉 로그인 시도: {self.existing_email},password:worng password")
+        self._shadow_fill('login_email', self.existing_email)
         self._shadow_click('login_submit')
-        self._shadow_fill('login_password', existing_password)
+        self._shadow_fill('login_password', "worng password")
         self._shadow_click('end_login_submit') 
         print("결과 검증 중")
         target_path = [
@@ -306,18 +309,19 @@ class DevFlowTestRunner:
     def tc_05_login(self):
         print("\n[TC-05] 로그인 테스트")
         self.driver.get(self.base_url)
-        self.driver.delete_all_cookies()
+        time.sleep(1)
+
         print("SSO로그인 버튼 클릭")
         self._click("//button[contains(., 'SSO')]")
         print("이메일, 비밀번호 입력 후 로그인 시도")
         time.sleep(1)
         # 3. [핵심] 헬퍼 함수로 입력 (Shadow DOM 뚫고 입력함)
-        print(f"👉 로그인 시도: {self.shared_email}")
+        print(f"👉 로그인 시도: {self.existing_email}")
         # 주소록에 적은 'login_email' 키를 사용
-        self._shadow_fill('login_email', self.shared_email)
+        self._shadow_fill('login_email', self.existing_email)
         self._shadow_click('login_submit')
         time.sleep(1)
-        self._shadow_fill('login_password', self.shared_password)
+        self._shadow_fill('login_password', self.existing_password)
         self._shadow_click('end_login_submit')
         # 5. 검증
         time.sleep(1)
@@ -331,13 +335,14 @@ class DevFlowTestRunner:
 
     def tc_06_profile(self):
         print("\n[TC-06] 프로필 수정 테스트")
-        self.driver.delete_all_cookies()
         self.driver.get(self.base_url)
-        print(f"👉 로그인 시도: {self.shared_email}")
-        print("임시 로그인")
         time.sleep(1)
-        self._shadow_fill('login_main_email', self.shared_email)
-        self._shadow_fill('login_main_password', self.shared_password)
+
+        print(f"👉 로그인 시도: {self.existing_email}")
+        print("로그인")
+        time.sleep(1)
+        self._shadow_fill('login_main_email', self.existing_email)
+        self._shadow_fill('login_main_password', self.existing_password)
         self._shadow_click('login_main_submit')
         time.sleep(1)
         print("대시보드 도달 확인")
@@ -373,7 +378,7 @@ class DevFlowTestRunner:
             # ==========================================================
             full_name = self.driver.find_element(By.XPATH, "//input[@aria-label='Full Name *']")# 이름 입력창 찾기
             self.driver.execute_script("arguments[0].value = arguments[0].value;", full_name)# 기존 값 유지
-            full_name.send_keys(self.shared_username)# 이름 재입력
+            full_name.send_keys(self.fake.name())# 이름 재입력
             time.sleep(1)
             # 3단계: 저장(Update) 버튼 클릭
             # ==========================================================
@@ -398,15 +403,21 @@ class DevFlowTestRunner:
         print("쿠키 삭제됨")
 
     def tc_07_teams(self):
+        self.driver.get(self.base_url)
         time.sleep(1)
+        self._shadow_fill('login_main_email', self.existing_email)
+        self._shadow_fill('login_main_password', self.existing_password)
+        self._shadow_click('login_main_submit')
+
         print("\n[TC-07] 팀 생성 및 멤버 초대 테스트")
-        teams_btn = self.driver.find_element(By.XPATH, "//div[contains(text(), 'Teams')]")
-        teams_btn.click()
+        print("대시보드 도달 확인")
+        time.sleep(1)
+        print("사이드바에서 'Teams' 메뉴 클릭")
+        self._shadow_click("menu_teams")
         time.sleep(1)
         print("'new Team' 버튼 클릭")
         new_team_span = self.driver.find_element(By.XPATH, "//span[contains(text(), 'New Team')]")
         new_team_span.click()
-        time.sleep(1)
 
         self.driver.delete_all_cookies()
         print("쿠키 삭제됨")
@@ -427,12 +438,12 @@ if __name__ == "__main__":
     target_tcs = [
         #"tc_00_templogin",
         #"tc_01_authentik",
-        "tc_02_signup",
+        #"tc_02_signup",
         #"tc_03_signup_duplicate",
         #"tc_04_password_fail",
         #"tc_05_login",
         #"tc_06_profile",
-        #"tc_07_teams",
+        "tc_07_teams",
     ]
 
     try:
@@ -446,7 +457,7 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"\n❌ 에러 발생: {e}")
         # 에러 나면 스크린샷 찍기 (디버깅용)
-        runner.driver.save_screenshot("error_screenshot.png")
+        runner.driver.save_screenshot("C:\Users\USER_20220316\Desktop\QA-Portfolio\selenium screenshot\error_screen.png")
         print("📸 현재 화면을 'error_screen.png'로 저장했습니다.")
     finally:
         runner.teardown()
