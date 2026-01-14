@@ -558,6 +558,53 @@ class DevFlowTestRunner:
         self.driver.delete_all_cookies()
         self.driver.execute_script("window.localStorage.clear();")
 
+    def tc_11_projectfeild(self):
+        print("프로젝트 필드 입력 테스트")
+        self.driver.get(self.base_url)
+        time.sleep(1)
+        self._shadow_fill('login_main_email', self.existing_email)
+        self._shadow_fill('login_main_password', self.existing_password)
+        self._shadow_click('login_main_submit')
+        print("대시보드 도달 확인")
+        time.sleep(1)
+        print("사이드바에서 'Projects' 메뉴 클릭")
+        self._shadow_click("menu_projects")
+        time.sleep(1)
+        print("'New Project' 버튼 클릭")
+        new_project_span = self.driver.find_element(By.XPATH, "//span[contains(text(), 'New Project')]")
+        new_project_span.click()
+        time.sleep(1)
+        project_name = f"{self.fake.color_name()} 개발 프로젝트"
+        print("프로젝트 이름 입력")
+        project_name_input = self.driver.find_element(By.XPATH, "//input[@aria-label='프로젝트 이름 *']")
+        project_name_input.send_keys(project_name)
+        print("프로젝트 키 입력")
+        upper_project_key = self.fake.color_name().upper()
+        project_key_input = self.driver.find_element(By.XPATH, "//input[@aria-label='프로젝트 키 *']")
+        project_key_input.send_keys(upper_project_key)
+        print("프로젝트 팀 선택")
+        project_team_select = "//div[contains(@class, 'q-field__control') and .//div[contains(., 'Team *')]]"
+        self._click(project_team_select)# 클릭해서 드롭다운 열기
+        time.sleep(1)# 대기
+        option_xpath = "//div[@role='option']//span[contains(text(), 'test')]"
+        self._click(option_xpath)
+        time.sleep(1)
+        print("프로젝트 생성 버튼 클릭")
+        self._click("//span[contains(text(), 'Create')]")
+        time.sleep(1)
+        if project_name in self.driver.page_source:
+            print(f"✅ Pass: {project_name}")
+        else:
+            print(f"❌ Fail: {project_name} 없음")
+        self.driver.delete_all_cookies()
+        self.driver.execute_script("window.localStorage.clear();")
+
+
+
+
+        
+
+
         
 
 
@@ -578,6 +625,7 @@ if __name__ == "__main__":
         "tc_08_teamfeild",
         "tc_09_teamcheck",
         "tc_10_project",
+        "tc_11_projectfeild",
 
     ]
 
