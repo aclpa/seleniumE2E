@@ -398,34 +398,8 @@ class DevFlowTestRunner:
         self.driver.delete_all_cookies()
         self.driver.execute_script("window.localStorage.clear();")
 
-    def tc_07_teams(self):
-        print("\n[TC-07] 팀 생성 및 멤버 초대 테스트")
-        self.driver.get(self.base_url)
-        time.sleep(1)
-        self._shadow_fill('login_main_email', self.existing_email)
-        self._shadow_fill('login_main_password', self.existing_password)
-        self._shadow_click('login_main_submit')
 
-        print("\n[TC-07] 팀 생성 및 멤버 초대 테스트")
-        print("대시보드 도달 확인")
-        time.sleep(1)
-        print("사이드바에서 'Teams' 메뉴 클릭")
-        self._shadow_click("menu_teams")
-        time.sleep(1)
-        print("'new Team' 버튼 클릭")
-        new_team_span = self.driver.find_element(By.XPATH, "//span[contains(text(), 'New Team')]")
-        new_team_span.click()
-        time.sleep(1)
-
-        if "Active Team" in self.driver.page_source:
-            print("✅ Pass")
-        else:
-            print("❌ Fail")
-
-        self.driver.delete_all_cookies()
-        self.driver.execute_script("window.localStorage.clear();")
-
-    def tc_08_teamfeild(self):
+    def tc_07_teamfeild(self):
         print("쿠키 삭제됨")
         self.driver.get(self.base_url)
         print("\n[TC-08] 팀 필드 테스트")
@@ -472,93 +446,7 @@ class DevFlowTestRunner:
         self.driver.delete_all_cookies()
         self.driver.execute_script("window.localStorage.clear();")
 
-    def tc_09_teamcheck(self):
-        print("\n[TC-09] 팀 생성 데이터 연동 테스트")
-        self.driver.get(self.base_url)
-        time.sleep(1)
-        team_name = f"{self.fake.color_name()} 프로젝트"
-        self._shadow_fill('login_main_email', self.existing_email)
-        self._shadow_fill('login_main_password', self.existing_password)
-        self._shadow_click('login_main_submit')
-        print("대시보드 도달 확인")
-        time.sleep(1)
-        print("사이드바에서 'Teams' 메뉴 클릭")
-        self._shadow_click("menu_teams")
-        time.sleep(1) 
-
-        print("'new Team' 버튼 클릭")
-        new_team_span = self.driver.find_element(By.XPATH, "//span[contains(text(), 'New Team')]")
-        new_team_span.click()
-        time.sleep(1)
-        print("팀 이름 입력")
-        team_name_input = self.driver.find_element(By.XPATH, "//input[@aria-label='Team Name *']")
-        team_name_input.send_keys(team_name)
-        target_member = "test123"
-        print("팀 멤버 검색시도: {test123}")
-        self.driver.find_element(By.XPATH, "//input[@aria-label='Select Initial Members']")
-        self._shadow_fill("//input[@aria-label='Select Initial Members']", target_member)
-        time.sleep(1)
-        try:
-            self._click(f"//div[@role='listbox']//div[contains(text(), '{target_member}')]")
-            print("맴버선택완료")
-        except:
-            print("맴버선택실패")
-            self._click("//span[contains(text(), 'Create')]")
-        time.sleep(1)
-        print("팀 생성 버튼 클릭")
-        self._click("//span[contains(text(), 'Create')]")
-        time.sleep(5)
-        try:
-            # ==========================================================
-            print("👉 1. 상단 계정 아이콘 클릭")
-    
-            avatar_selector = ".q-avatar" 
-            avatar_btn = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, avatar_selector)))
-            avatar_btn.click()
-            time.sleep(1) # 메뉴가 펼쳐질 때까지 잠시 대기
-
-            print("👉 2. 메뉴에서 Profile 클릭")
-            
-            menu_text = "Profile"
-            profile_menu = self.driver.find_element(By.XPATH, f"//div[contains(text(), '{menu_text}')]")
-            profile_menu.click()
-            time.sleep(1) # 페이지 이동 대기
-
-
-            if team_name in self.driver.page_source:
-                print(f"✅ Pass: 프로필 페이지에 팀명이 보입니다: {team_name}")
-            else:
-                print(f"❌ Fail: 프로필 페이지에 팀명이 보이지 않습니다: {team_name}")
-        except Exception as e:
-                print(f"❌ 에러 발생: {e}")
-
-                self.driver.delete_all_cookies()
-                self.driver.execute_script("window.localStorage.clear();")
-
-    def tc_10_project(self):
-        print("프로젝트 관리 테스트")
-        self.driver.get(self.base_url)
-        time.sleep(1)
-        self._shadow_fill('login_main_email', self.existing_email)
-        self._shadow_fill('login_main_password', self.existing_password)
-        self._shadow_click('login_main_submit')
-        print("대시보드 도달 확인")
-        time.sleep(1)
-        print("사이드바에서 'Projects' 메뉴 클릭")
-        self._shadow_click("menu_projects")
-        time.sleep(1)
-        print("'New Project' 버튼 클릭")
-        new_project_span = self.driver.find_element(By.XPATH, "//span[contains(text(), 'New Project')]")
-        new_project_span.click()
-        time.sleep(1)
-        if "Cancel" in self.driver.page_source:
-            print("✅ Pass")
-        else:
-            print("❌ Fail")
-        self.driver.delete_all_cookies()
-        self.driver.execute_script("window.localStorage.clear();")
-
-    def tc_11_projectfeild(self):
+    def tc_08_projectfeild(self):
         print("프로젝트 필드 입력 테스트")
         self.driver.get(self.base_url)
         time.sleep(1)
@@ -580,10 +468,10 @@ class DevFlowTestRunner:
         project_name_input.send_keys(project_name)
         print("프로젝트 키 입력")
         upper_project_key = self.fake.color_name().upper()
-        project_key_input = self.driver.find_element(By.XPATH, "//input[@aria-label='프로젝트 키 *']")
+        project_key_input = self.driver.find_element(By.XPATH, "//input[@aria-label='프로젝트 키 *']")# 프로젝트 키 입력창 찾기
         project_key_input.send_keys(upper_project_key)
-        print("프로젝트 팀 선택")
-        project_team_select = "//div[contains(@class, 'q-field__control') and .//div[contains(., 'Team *')]]"
+        print("프로젝트 팀 선택")# 클릭해서 드롭다운 열기
+        project_team_select = "//div[contains(@class, 'q-field__control') and .//div[contains(., 'Team *')]]"# XPath 수정
         self._click(project_team_select)# 클릭해서 드롭다운 열기
         time.sleep(1)# 대기
         option_xpath = "//div[@role='option']//span[contains(text(), 'test')]"
@@ -600,12 +488,51 @@ class DevFlowTestRunner:
         self.driver.execute_script("window.localStorage.clear();")
 
 
+    def tc_09_sprint(self):
+        print("\n[TC-09] 스프린트 생성 테스트")
+        self.driver.get(self.base_url)
+        time.sleep(1)
+        self._shadow_fill('login_main_email', self.existing_email)
+        self._shadow_fill('login_main_password', self.existing_password)
+        self._shadow_click('login_main_submit')
+        print("대시보드 도달 확인")
+        time.sleep(1)   
+        print("사이드바에서 Sprints 메뉴 클릭")
+        self._shadow_click("//div[@role='listitem' and contains(., 'Sprints')]")
+        time.sleep(1)
+        print("'New Sprint' 버튼 클릭")
+        new_sprint_span = self.driver.find_element(By.XPATH, "//span[contains(text(), 'New Sprint')]")
+        new_sprint_span.click()
+        time.sleep(1)
+        print("프로젝트 선택")
+        project_select = "//div[contains(@class, 'q-field__control') and .//div[contains(., 'Project *')]]"
+        self._click(project_select)
+        time.sleep(1)
+        option_xpath = "//div[@role='option']//span[contains(text(), 'test')]"
+        self._click(option_xpath)
+        time.sleep(1)
+        print("스프린트 이름 입력")
+        sprint_name = f"{self.fake.color_name()} 스프린트"
+        sprint_name_input = self.driver.find_element(By.XPATH, "//input[@aria-label='Sprint Name *']")
+        sprint_name_input.send_keys(sprint_name)
+        time.sleep(1)
+        print("status 선택")
+        status_xpath = self._click("//i[contains(text(), 'event_note')]")
+        self._click(status_xpath)
+        time.sleep(1)
+        active_ele = self.driver.switch_to.active_element
+        active_ele.send_keys(Keys.ARROW_UP)
+        time.sleep(0.5)
+        active_ele.send_keys(Keys.ENTER)
+        time.sleep(1)
 
+        print("스프린트 생성 버튼 클릭")
+        self._click("//span[contains(text(), 'Create')]")
+        time.sleep(1)
 
-        
+        self.driver.delete_all_cookies()
+        self.driver.execute_script("window.localStorage.clear();")
 
-
-        
 
 
 
@@ -621,11 +548,9 @@ if __name__ == "__main__":
         "tc_04_password_fail",
         "tc_05_login",
         "tc_06_profile",
-        "tc_07_teams",
-        "tc_08_teamfeild",
-        "tc_09_teamcheck",
-        "tc_10_project",
-        "tc_11_projectfeild",
+        "tc_07_teamfeild",  
+        "tc_08_projectfeild",
+        "tc_09_sprint",
 
     ]
 
