@@ -180,7 +180,6 @@ class DevFlowTestRunner:
         
     def tc_01_signup(self):
         print("\n[TC-01] 회원가입 성공 테스트")
-
         print("가입 폼 작성 중...")
         email = self.fake.free_email()
         username = self.fake.user_name()
@@ -188,6 +187,7 @@ class DevFlowTestRunner:
         print(f"생성된 계정 정보 | ID: {username} / PW: {password} / Email: {email}")
 
         self.driver.get(self.base_url)
+        time.sleep(10)
         time.sleep(0.5)
         print("로그인 버튼 클릭")
         self._shadow_click('ahthentik_sso_btn')
