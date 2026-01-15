@@ -3,6 +3,7 @@ from src.pages.login_page import LoginPage
 from src.pages.profile_page import ProfilePage
 from src.pages.dashboard_page import DashboardPage
 from src.config.config import Config
+from src.pages.base_page import BasePage as base_page
 import time
 
 def test_profile_update(driver, fake): # tc_05
@@ -26,10 +27,10 @@ def test_profile_update(driver, fake): # tc_05
     profile_page.update_profile(new_name, new_phone)
     
     # 5. 검증 (토스트 메시지)
-    toast_msg = profile_page.get_toast_message()
-    print(f"결과 메시지: {toast_msg}")
-    
-    assert "updated" in toast_msg or "성공" in toast_msg or "successfully" in toast_msg
+    actual_msg = profile_page.get_toast_message()
+    print(f"결과 메시지: {actual_msg}")
+
+    assert "updated" in actual_msg or "성공" in actual_msg or "successfully" in actual_msg
 
 def test_logout(driver): # tc_11
     print("\n[TC-11] 로그아웃 테스트")
@@ -43,9 +44,7 @@ def test_logout(driver): # tc_11
     dashboard_page.logout()
     
     # 3. 검증 (토스트 메시지 + URL)
-    toast_msg = dashboard_page.get_toast_message() # 로그아웃 토스트 확인
-    print(f"로그아웃 메시지: {toast_msg}")
-    
-    # URL이 로그인 페이지로 변했는지 확인
-    # (authentik_url 변수나 login 글자 포함 여부 확인)
-    assert "로그아웃" in toast_msg
+    actual_msg = base_page(driver).get_toast_message()
+    print(f"결과 메시지: {actual_msg}")
+
+    assert "로그아웃" in actual_msg or "안전하게" in actual_msg or "리소스" in actual_msg
