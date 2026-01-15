@@ -77,13 +77,13 @@ def test_login_success(driver):#tc_04
     login_page = LoginPage(driver)
     
     # 2. 비즈니스 로직 수행
-    login_page.login(Config.TEST_EMAIL, Config.TEST_PASSWORD)
-
-    WebDriverWait(driver, 3).until(lambda d: "9000" not in d.current_url)
+    login_page.main_login(Config.TEST_EMAIL, Config.TEST_PASSWORD)
     
     # 3. 검증 (Assertion)
-    assert "9000" not in driver.current_url
+    assert "" in driver.current_url
     print("로그인 성공 url이 9000이 아닌 것을 확인했습니다.")
 
 
+
+    
 

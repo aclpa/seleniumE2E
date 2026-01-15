@@ -4,7 +4,13 @@ from src.config.config import Config
 import time
 
 class LoginPage(BasePage):
-    SSO_BTN = "//button[contains(., 'SSO')]"
+    MAIN_LOGIN = "//input[@aria-label='이메일' or @type='email']" # 메인 로그인 이메일 입력필드
+
+    MAIN_PW = "//input[@type='password' or @aria-label='비밀번호']" # 메인 로그인 비밀번호 입력필드
+
+    MAIN_LOGIN_BTN = "//button[@type='submit' and @style=('font-size: 20px;')]" # 메인 로그인 버튼
+
+    SSO_BTN = "//button[contains(., 'SSO')]" # SSO 로그인 버튼
 
     LINK_SIGNUP = ["ak-flow-executor","ak-stage-identification","a[id='enroll']"] # 회원가입 링크
 
@@ -31,6 +37,16 @@ class LoginPage(BasePage):
     signup_error = ["ak-flow-executor", "ak-stage-access-denied", "ak-empty-state[header='요청이 거부되었습니다.']"] # 회원가입 에러 메시지
 
     login_error = ["ak-flow-executor", "ak-stage-password", "ak-flow-input-password > ak-form-element", "p.pf-c-form__helper-text"]# 로그인 에러 메시지
+
+
+
+
+    def main_login(self, email, password):
+        self.driver.get(Config.BASE_URL)
+        
+        self.send_keys(self.MAIN_LOGIN, email)
+        self.send_keys(self.MAIN_PW, password)
+        self.click(self.MAIN_LOGIN_BTN)
 
 
 
@@ -87,6 +103,9 @@ class LoginPage(BasePage):
             return "" # 안 보이면 빈 문자열 반환
         except:
             return ""
+        
+
+    
         
 
     

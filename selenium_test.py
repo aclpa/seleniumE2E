@@ -1,178 +1,178 @@
-import time
-import sys
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from faker import Faker
-from selenium.webdriver.common.action_chains import ActionChains
+# import time
+# import sys
+# from selenium import webdriver
+# from selenium.webdriver.common.by import By
+# from selenium.webdriver.common.keys import Keys
+# from selenium.webdriver.chrome.service import Service
+# from webdriver_manager.chrome import ChromeDriverManager
+# from selenium.webdriver.support.ui import WebDriverWait
+# from selenium.webdriver.support import expected_conditions as EC
+# from faker import Faker
+# from selenium.webdriver.common.action_chains import ActionChains
 
-class DevFlowTestRunner:
-    def __init__(self):
-        """테스트 초기화: 브라우저 실행"""
-        print("🚀 [Setup] 테스트 환경을 초기화합니다...")
-        options = webdriver.ChromeOptions()
-        # options.add_argument("--headless")  # 화면 안 보고 싶으면 주석 해제
-        # options.add_argument("--start-maximized") # 전체화면
-        self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-        self.wait = WebDriverWait(self.driver, 10)
-        self.base_url = "http://localhost:8080"
-        self.auth_paths = {
-        "login_email": [
-        "ak-flow-executor",
-        "ak-stage-identification", 
-        "input[name='uidField']" 
-        ],
-        "login_submit": [
-        "ak-flow-executor",
-        "ak-stage-identification",
-        "button[type='submit']"
-        ],
-        "login_password": [
-        "ak-flow-executor",
-        "ak-stage-password",
-        "input[autocomplete='current-password']"
-        ],
-        "end_login_submit": [
-        "ak-flow-executor",
-        "ak-stage-password",
-        "button[type='submit']"
-        ],
-        "submit":[
-        "ak-flow-executor",
-        "ak-stage-identification",
-        "a[id='enroll']"
-        ],
-        "username": [
-        "ak-flow-executor",
-        "ak-stage-prompt",
-        "input[type='text']"
-        ],
-        "email": [
-        "ak-flow-executor",
-        "ak-stage-prompt",
-        "input[type='email']"
-        ],
-        "password": [
-        "ak-flow-executor",
-        "ak-stage-prompt",
-        "input[type='password']"
-        ],
-        "password_rep": [
-        "ak-flow-executor",
-        "ak-stage-prompt",
-        "input[name='password_repeat']"
-        ],
-        "submit_btn": [
-        "ak-flow-executor",
-        "ak-stage-prompt",
-        "button[type='submit']"
-        ],
-        "menu_projects": "//div[@role='listitem' and contains(., 'Projects')]",
-        "menu_teams": "//div[@role='listitem' and contains(., 'Teams')]",
-        "ahthentik_sso_btn": "//button[contains(., 'SSO')]",
-        "login_main_email": "//input[@type='text' or @type='email']",
-        "login_main_password":"//input[@type='password']",
-        "login_main_submit": "//span[contains(text(), '로그인')]",
-        }
-        self.authentik_url = "http://localhost:9000/if/flow/enrollment-flow/?next=%2Fapplication%2Fo%2Fauthorize%2F%3Fresponse_type%3Dcode%26client_id%3DqvN7JqQB4hk4LL1tlNbTBKcxuGqSQnA5pD8UBE1O%26redirect_uri%3Dhttp%253A%252F%252Flocalhost%253A8080%252Fauth%252Fcallback%26scope%3Dopenid%2Bemail%2Bprofile%26state%3Drandom_string_for_security"
-        self.shared_email = None
-        self.shared_password = None
-        self.shared_username = None
-        self.dashboard_url = "http://localhost:8080/#/dashboard"
-        self.fake = Faker('ko_KR')
-        self.scrpit ="document.querySelector(\"body > ak-flow-executor\").shadowRoot.querySelector(\"ak-locale-context > div.pf-c-page__drawer > div > div > div > div > div > div > div > ak-stage-password\").shadowRoot.querySelector(\"div > form > ak-flow-input-password > ak-form-element\").shadowRoot.querySelector(\"div > p\")"
-        self.existing_email = "test123a@test.com"
-        self.existing_password = "test123qaswera"
-    def teardown(self):
-        """테스트 종료: 브라우저 닫기"""
-        print("🛑 [Teardown] 브라우저를 닫습니다.")
-        time.sleep(0.5)
-        self.driver.quit()
-    # =================================================================
-    def get_shadow_element_v4(self, selectors):
-        """
-        [엔진] 섀도우 돔을 뚫고 들어가는 재귀 함수 (Retry 로직 포함)
-        """
-        try:
+# class DevFlowTestRunner:
+#     def __init__(self):
+#         """테스트 초기화: 브라우저 실행"""
+#         print("🚀 [Setup] 테스트 환경을 초기화합니다...")
+#         options = webdriver.ChromeOptions()
+#         # options.add_argument("--headless")  # 화면 안 보고 싶으면 주석 해제
+#         # options.add_argument("--start-maximized") # 전체화면
+#         self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+#         self.wait = WebDriverWait(self.driver, 10)
+#         self.base_url = "http://localhost:8080"
+#         self.auth_paths = {
+#         "login_email": [
+#         "ak-flow-executor",
+#         "ak-stage-identification", 
+#         "input[name='uidField']" 
+#         ],
+#         "login_submit": [
+#         "ak-flow-executor",
+#         "ak-stage-identification",
+#         "button[type='submit']"
+#         ],
+#         "login_password": [
+#         "ak-flow-executor",
+#         "ak-stage-password",
+#         "input[autocomplete='current-password']"
+#         ],
+#         "end_login_submit": [
+#         "ak-flow-executor",
+#         "ak-stage-password",
+#         "button[type='submit']"
+#         ],
+#         "submit":[
+#         "ak-flow-executor",
+#         "ak-stage-identification",
+#         "a[id='enroll']"
+#         ],
+#         "username": [
+#         "ak-flow-executor",
+#         "ak-stage-prompt",
+#         "input[type='text']"
+#         ],
+#         "email": [
+#         "ak-flow-executor",
+#         "ak-stage-prompt",
+#         "input[type='email']"
+#         ],
+#         "password": [
+#         "ak-flow-executor",
+#         "ak-stage-prompt",
+#         "input[type='password']"
+#         ],
+#         "password_rep": [
+#         "ak-flow-executor",
+#         "ak-stage-prompt",
+#         "input[name='password_repeat']"
+#         ],
+#         "submit_btn": [
+#         "ak-flow-executor",
+#         "ak-stage-prompt",
+#         "button[type='submit']"
+#         ],
+#         "menu_projects": "//div[@role='listitem' and contains(., 'Projects')]",
+#         "menu_teams": "//div[@role='listitem' and contains(., 'Teams')]",
+#         "ahthentik_sso_btn": "//button[contains(., 'SSO')]",
+#         "login_main_email": "//input[@type='text' or @type='email']",
+#         "login_main_password":"//input[@type='password']",
+#         "login_main_submit": "//span[contains(text(), '로그인')]",
+#         }
+#         self.authentik_url = "http://localhost:9000/if/flow/enrollment-flow/?next=%2Fapplication%2Fo%2Fauthorize%2F%3Fresponse_type%3Dcode%26client_id%3DqvN7JqQB4hk4LL1tlNbTBKcxuGqSQnA5pD8UBE1O%26redirect_uri%3Dhttp%253A%252F%252Flocalhost%253A8080%252Fauth%252Fcallback%26scope%3Dopenid%2Bemail%2Bprofile%26state%3Drandom_string_for_security"
+#         self.shared_email = None
+#         self.shared_password = None
+#         self.shared_username = None
+#         self.dashboard_url = "http://localhost:8080/#/dashboard"
+#         self.fake = Faker('ko_KR')
+#         self.scrpit ="document.querySelector(\"body > ak-flow-executor\").shadowRoot.querySelector(\"ak-locale-context > div.pf-c-page__drawer > div > div > div > div > div > div > div > ak-stage-password\").shadowRoot.querySelector(\"div > form > ak-flow-input-password > ak-form-element\").shadowRoot.querySelector(\"div > p\")"
+#         self.existing_email = "test123a@test.com"
+#         self.existing_password = "test123qaswera"
+#     def teardown(self):
+#         """테스트 종료: 브라우저 닫기"""
+#         print("🛑 [Teardown] 브라우저를 닫습니다.")
+#         time.sleep(0.5)
+#         self.driver.quit()
+#     # =================================================================
+#     def get_shadow_element_v4(self, selectors):
+#         """
+#         [엔진] 섀도우 돔을 뚫고 들어가는 재귀 함수 (Retry 로직 포함)
+#         """
+#         try:
 
-            element = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selectors[0])))# 1. 최상위 요소 찾기
+#             element = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selectors[0])))# 1. 최상위 요소 찾기
 
-            # 2. 내부 관문 돌파
-            for selector in selectors[1:]:# 나머지 셀렉터들에 대해 반복
-                shadow_root = element.shadow_root# 섀도우 루트 접근
-                found = False# 요소 찾기 시도
-                # 타이밍 이슈 해결을 위한 재시도 로직
-                for _ in range(5): # 최대 5회 재시도
-                    try:# 요소 찾기 시도
-                        time.sleep(0.5)# 잠시 대기
-                        element = shadow_root.find_element(By.CSS_SELECTOR, selector)# 내부 요소 찾기
-                        found = True# 성공하면 루프
-                        break# 탈출
-                    except:# 실패하면 재시도
-                        pass# 무시하고 재시도
+#             # 2. 내부 관문 돌파
+#             for selector in selectors[1:]:# 나머지 셀렉터들에 대해 반복
+#                 shadow_root = element.shadow_root# 섀도우 루트 접근
+#                 found = False# 요소 찾기 시도
+#                 # 타이밍 이슈 해결을 위한 재시도 로직
+#                 for _ in range(5): # 최대 5회 재시도
+#                     try:# 요소 찾기 시도
+#                         time.sleep(0.5)# 잠시 대기
+#                         element = shadow_root.find_element(By.CSS_SELECTOR, selector)# 내부 요소 찾기
+#                         found = True# 성공하면 루프
+#                         break# 탈출
+#                     except:# 실패하면 재시도
+#                         pass# 무시하고 재시도
                 
-                if not found:
-                    raise Exception(f"요소를 찾을 수 없음 (Shadow DOM): {selector}")# 찾지 못했으면 예외 발생
+#                 if not found:
+#                     raise Exception(f"요소를 찾을 수 없음 (Shadow DOM): {selector}")# 찾지 못했으면 예외 발생
             
-            return element
+#             return element
             
-        except Exception as e:
-            print(f"❌ [Engine Error] {e}")
-            return None
+#         except Exception as e:
+#             print(f"❌ [Engine Error] {e}")
+#             return None
 
-    def _get_element_smart(self, path_key_or_selector):
-        """
-        [판별기] 입력받은 키가 리스트(Shadow)인지 문자열(일반)인지 구분해서 요소를 찾아줌
-        """
-        # 1. 딕셔너리에서 꺼내기 (없으면 입력값 그대로 사용)
-        target = self.auth_paths.get(path_key_or_selector, path_key_or_selector)
+#     def _get_element_smart(self, path_key_or_selector):
+#         """
+#         [판별기] 입력받은 키가 리스트(Shadow)인지 문자열(일반)인지 구분해서 요소를 찾아줌
+#         """
+#         # 1. 딕셔너리에서 꺼내기 (없으면 입력값 그대로 사용)
+#         target = self.auth_paths.get(path_key_or_selector, path_key_or_selector)
 
-        # 2. 리스트면 -> Shadow DOM 탐색
-        if isinstance(target, list):
-            return self.get_shadow_element_v4(target)
+#         # 2. 리스트면 -> Shadow DOM 탐색
+#         if isinstance(target, list):
+#             return self.get_shadow_element_v4(target)
         
-        # 3. 문자열이면 -> 일반 DOM 탐색
-        else:
-            # XPath vs CSS 구분
-            by_method = By.XPATH if ("//" in target) or target.startswith("(") else By.CSS_SELECTOR
-            return self.wait.until(EC.element_to_be_clickable((by_method, target)))
+#         # 3. 문자열이면 -> 일반 DOM 탐색
+#         else:
+#             # XPath vs CSS 구분
+#             by_method = By.XPATH if ("//" in target) or target.startswith("(") else By.CSS_SELECTOR
+#             return self.wait.until(EC.element_to_be_clickable((by_method, target)))
 
-    def _shadow_fill(self, path_key, value):
-        """[통합 입력 함수] Shadow DOM / 일반 DOM 자동 구분"""
-        print(f"⌨️  입력 시도: [{path_key}] -> {value}")
-        try:
-            element = self._get_element_smart(path_key)
-            if element:
-                element.click()
-                element.clear()
-                element.send_keys(value)
-                print("   ✅ 입력 성공")
-            else:
-                print("   ❌ 요소를 찾을 수 없습니다.")
-        except Exception as e:
-            print(f"   ❌ 에러: {e}")
+#     def _shadow_fill(self, path_key, value):
+#         """[통합 입력 함수] Shadow DOM / 일반 DOM 자동 구분"""
+#         print(f"⌨️  입력 시도: [{path_key}] -> {value}")
+#         try:
+#             element = self._get_element_smart(path_key)
+#             if element:
+#                 element.click()
+#                 element.clear()
+#                 element.send_keys(value)
+#                 print("   ✅ 입력 성공")
+#             else:
+#                 print("   ❌ 요소를 찾을 수 없습니다.")
+#         except Exception as e:
+#             print(f"   ❌ 에러: {e}")
 
-    def _shadow_click(self, path_key):
-        """[통합 클릭 함수] Shadow DOM / 일반 DOM 자동 구분"""
-        print(f"🖱️  클릭 시도: [{path_key}]")
-        try:
-            element = self._get_element_smart(path_key)
-            if element:
-                element.click()
-                print("   ✅ 클릭 성공")
-            else:
-                print("   ❌ 요소를 찾을 수 없습니다.")
-        except Exception as e:
-            print(f"   ❌ 에러: {e}")
+#     def _shadow_click(self, path_key):
+#         """[통합 클릭 함수] Shadow DOM / 일반 DOM 자동 구분"""
+#         print(f"🖱️  클릭 시도: [{path_key}]")
+#         try:
+#             element = self._get_element_smart(path_key)
+#             if element:
+#                 element.click()
+#                 print("   ✅ 클릭 성공")
+#             else:
+#                 print("   ❌ 요소를 찾을 수 없습니다.")
+#         except Exception as e:
+#             print(f"   ❌ 에러: {e}")
 
-    def _click(self, xpath_or_css):
-        """[일반 클릭 전용] (하위 호환성 유지용)"""
-        print(f"🖱️  일반 클릭: {xpath_or_css}")
-        self._shadow_click(xpath_or_css)
+#     def _click(self, xpath_or_css):
+#         """[일반 클릭 전용] (하위 호환성 유지용)"""
+#         print(f"🖱️  일반 클릭: {xpath_or_css}")
+#         self._shadow_click(xpath_or_css)
 
     # =================================================================
     # =================================================================
@@ -238,39 +238,39 @@ class DevFlowTestRunner:
     #     self.driver.delete_all_cookies()
     #     self.driver.execute_script("window.localStorage.clear();")
 
-    def tc_03_password_fail(self):
-        print("\n[TC-03] 로그인 비밀번호 실패 테스트")
-        self.driver.get(self.base_url)
-        time.sleep(0.5)
-        print("SSO로그인 버튼 클릭")
-        self._click("//button[contains(., 'SSO')]")
+    # def tc_03_password_fail(self):
+    #     print("\n[TC-03] 로그인 비밀번호 실패 테스트")
+    #     self.driver.get(self.base_url)
+    #     time.sleep(0.5)
+    #     print("SSO로그인 버튼 클릭")
+    #     self._click("//button[contains(., 'SSO')]")
         
-        print("잘못된 비밀번호 입력 후 로그인 시도")
-        print(f"👉 로그인 시도: {self.existing_email},password:worng password")
-        self._shadow_fill('login_email', self.existing_email)
-        self._shadow_click('login_submit')
-        self._shadow_fill('login_password', "worng password")
-        self._shadow_click('end_login_submit') 
-        print("결과 검증 중")
-        target_path = [
-            "ak-flow-executor", 
-            "ak-stage-password", 
-            "ak-flow-input-password > ak-form-element", 
-            "p.pf-c-form__helper-text"  # 혹은 "div > p" (에러 메시지 태그)
-        ]
-        time.sleep(0.5)
-        error_element = self.get_shadow_element_v4(target_path)
-        if error_element:
-            error_text = error_element.text
-            print(f"  🔍 감지된 메시지: {error_text}")
-            expected_keywords = ["Invalid password"]            
-            if any(keyword in error_text for keyword in expected_keywords):
-                print("✅ Pass: 로그인 실패 메시지가 정상적으로 출력되었습니다.")
-            else:
-                print(f"⚠️ Warning: 에러 요소는 찾았으나 메시지가 예상과 다릅니다. (내용: {error_text})")
+    #     print("잘못된 비밀번호 입력 후 로그인 시도")
+    #     print(f"👉 로그인 시도: {self.existing_email},password:worng password")
+    #     self._shadow_fill('login_email', self.existing_email)
+    #     self._shadow_click('login_submit')
+    #     self._shadow_fill('login_password', "worng password")
+    #     self._shadow_click('end_login_submit') 
+    #     print("결과 검증 중")
+    #     target_path = [
+    #         "ak-flow-executor", 
+    #         "ak-stage-password", 
+    #         "ak-flow-input-password > ak-form-element", 
+    #         "p.pf-c-form__helper-text"  # 혹은 "div > p" (에러 메시지 태그)
+    #     ]
+    #     time.sleep(0.5)
+    #     error_element = self.get_shadow_element_v4(target_path)
+    #     if error_element:
+    #         error_text = error_element.text
+    #         print(f"  🔍 감지된 메시지: {error_text}")
+    #         expected_keywords = ["Invalid password"]            
+    #         if any(keyword in error_text for keyword in expected_keywords):
+    #             print("✅ Pass: 로그인 실패 메시지가 정상적으로 출력되었습니다.")
+    #         else:
+    #             print(f"⚠️ Warning: 에러 요소는 찾았으나 메시지가 예상과 다릅니다. (내용: {error_text})")
 
-        self.driver.delete_all_cookies()
-        self.driver.execute_script("window.localStorage.clear();")
+    #     self.driver.delete_all_cookies()
+    #     self.driver.execute_script("window.localStorage.clear();")
 
     # def tc_04_login(self):
     #     print("\n[TC-04] 로그인 테스트")
@@ -300,77 +300,77 @@ class DevFlowTestRunner:
     #     self.driver.delete_all_cookies()
     #     self.driver.execute_script("window.localStorage.clear();")
 
-    def tc_05_profile(self):
-        print("\n[TC-05] 프로필 수정 테스트")
-        self.driver.get(self.base_url)
-        time.sleep(0.5)
+    # def tc_05_profile(self):
+    #     print("\n[TC-05] 프로필 수정 테스트")
+    #     self.driver.get(self.base_url)
+    #     time.sleep(0.5)
 
-        print(f"👉 로그인 시도: {self.existing_email}")
-        print("로그인")
-        time.sleep(0.5)
-        self._shadow_fill('login_main_email', self.existing_email)
-        self._shadow_fill('login_main_password', self.existing_password)
-        self._shadow_click('login_main_submit')
-        time.sleep(0.5)
-        print("대시보드 도달 확인")
-        time.sleep(0.5)
-        try:
-            # ==========================================================
-            print("👉 1. 상단 계정 아이콘 클릭")
+    #     print(f"👉 로그인 시도: {self.existing_email}")
+    #     print("로그인")
+    #     time.sleep(0.5)
+    #     self._shadow_fill('login_main_email', self.existing_email)
+    #     self._shadow_fill('login_main_password', self.existing_password)
+    #     self._shadow_click('login_main_submit')
+    #     time.sleep(0.5)
+    #     print("대시보드 도달 확인")
+    #     time.sleep(0.5)
+    #     try:
+    #         # ==========================================================
+    #         print("👉 1. 상단 계정 아이콘 클릭")
     
-            avatar_selector = ".q-avatar" 
-            avatar_btn = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, avatar_selector)))
-            avatar_btn.click()
-            time.sleep(0.5) # 메뉴가 펼쳐질 때까지 잠시 대기
+    #         avatar_selector = ".q-avatar" 
+    #         avatar_btn = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, avatar_selector)))
+    #         avatar_btn.click()
+    #         time.sleep(0.5) # 메뉴가 펼쳐질 때까지 잠시 대기
 
-            print("👉 2. 메뉴에서 Profile 클릭")
+    #         print("👉 2. 메뉴에서 Profile 클릭")
             
-            menu_text = "Profile"
-            profile_menu = self.driver.find_element(By.XPATH, f"//div[contains(text(), '{menu_text}')]")
-            profile_menu.click()
-            time.sleep(0.5) # 페이지 이동 대기
+    #         menu_text = "Profile"
+    #         profile_menu = self.driver.find_element(By.XPATH, f"//div[contains(text(), '{menu_text}')]")
+    #         profile_menu.click()
+    #         time.sleep(0.5) # 페이지 이동 대기
 
-            edit_profile = "Edit Profile"
+    #         edit_profile = "Edit Profile"
 
-            edit_profile_block = self.driver.find_element(By.XPATH, f"//span[contains(., '{edit_profile}')]")
-            edit_profile_block.click()
-            time.sleep(0.5)
-            # ==========================================================
-            fake = Faker('ko_KR')# 한국어 전화번호 생성기
-            new_phone = fake.numerify(text='010-####-####')# 새로운 전화번호 생성
-            print(f"👉 3. 새 전화번호 입력: {new_phone}")
-            phone_input = self.driver.find_element(By.XPATH, "//input[@aria-label='Phone *']")# 전화번호 입력창 찾기
-            phone_input.send_keys(Keys.CONTROL + "a")# 기존 값 지우기
-            phone_input.send_keys(Keys.DELETE)
-            phone_input.send_keys(new_phone)
-            # ==========================================================
-            full_name = self.driver.find_element(By.XPATH, "//input[@aria-label='Full Name *']")# 이름 입력창 찾기
-            full_name.send_keys(Keys.CONTROL + "a")
-            full_name.send_keys(Keys.DELETE)
-            full_name.send_keys(self.fake.name())# 이름 재입력
-            time.sleep(0.5)
-            # 3단계: 저장(Update) 버튼 클릭
-            # ==========================================================
-            print("👉 4. Update 버튼 클릭")
-            button_text = "Update"
-            update_btn = self.driver.find_element(By.XPATH, f"//button[contains(., '{button_text}')]")
-            update_btn.click()
-            # ==========================================================
-            print("👉 5. 'updated successfully' 메시지 확인 중...")
-            time.sleep(0.5)
-            # 화면 전체에서 해당 텍스트가 떴는지 찾습니다. (토스트 메시지 감지)
-            body_text = self.driver.find_element(By.TAG_NAME, "body").text # <body> 전체 텍스트
+    #         edit_profile_block = self.driver.find_element(By.XPATH, f"//span[contains(., '{edit_profile}')]")
+    #         edit_profile_block.click()
+    #         time.sleep(0.5)
+    #         # ==========================================================
+    #         fake = Faker('ko_KR')# 한국어 전화번호 생성기
+    #         new_phone = fake.numerify(text='010-####-####')# 새로운 전화번호 생성
+    #         print(f"👉 3. 새 전화번호 입력: {new_phone}")
+    #         phone_input = self.driver.find_element(By.XPATH, "//input[@aria-label='Phone *']")# 전화번호 입력창 찾기
+    #         phone_input.send_keys(Keys.CONTROL + "a")# 기존 값 지우기
+    #         phone_input.send_keys(Keys.DELETE)
+    #         phone_input.send_keys(new_phone)
+    #         # ==========================================================
+    #         full_name = self.driver.find_element(By.XPATH, "//input[@aria-label='Full Name *']")# 이름 입력창 찾기
+    #         full_name.send_keys(Keys.CONTROL + "a")
+    #         full_name.send_keys(Keys.DELETE)
+    #         full_name.send_keys(self.fake.name())# 이름 재입력
+    #         time.sleep(0.5)
+    #         # 3단계: 저장(Update) 버튼 클릭
+    #         # ==========================================================
+    #         print("👉 4. Update 버튼 클릭")
+    #         button_text = "Update"
+    #         update_btn = self.driver.find_element(By.XPATH, f"//button[contains(., 'Update')]")
+    #         update_btn.click()
+    #         # ==========================================================
+    #         print("👉 5. 'updated successfully' 메시지 확인 중...")
+    #         time.sleep(0.5)
+    #         # 화면 전체에서 해당 텍스트가 떴는지 찾습니다. (토스트 메시지 감지)
+    #         body_text = self.driver.find_element(By.TAG_NAME, "body").text # <body> 전체 텍스트
 
-            time.sleep(0.5)
-            if "updated successfully" in body_text:
-                print("✅ Pass: 성공 메시지 확인됨")
-            else:
-                print(f"⚠️ Warning: 성공 메시지를 못 찾았습니다. (화면에 뜬 텍스트: {body_text[:50]}...)")
-        except Exception as e:
-                print(f"❌ 에러 발생: {e}")
+    #         time.sleep(0.5)
+    #         if "updated successfully" in body_text:
+    #             print("✅ Pass: 성공 메시지 확인됨")
+    #         else:
+    #             print(f"⚠️ Warning: 성공 메시지를 못 찾았습니다. (화면에 뜬 텍스트: {body_text[:50]}...)")
+    #     except Exception as e:
+    #             print(f"❌ 에러 발생: {e}")
 
-        self.driver.delete_all_cookies()
-        self.driver.execute_script("window.localStorage.clear();")
+    #     self.driver.delete_all_cookies()
+    #     self.driver.execute_script("window.localStorage.clear();")
 
 
     def tc_06_teamfeild(self):
