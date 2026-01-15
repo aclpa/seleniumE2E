@@ -94,7 +94,7 @@ class DevFlowTestRunner:
         """테스트 종료: 브라우저 닫기"""
         print("🛑 [Teardown] 브라우저를 닫습니다.")
         # 3초 뒤에 닫아서 결과 확인할 시간 주기
-        time.sleep(3)
+        time.sleep(0.5)
         self.driver.quit()
     # =================================================================
     def get_shadow_element_v4(self, selectors):
@@ -186,11 +186,11 @@ class DevFlowTestRunner:
         print("[TC-01] 회원가입 테스트")
         print("localhost:8080 페이지 이동")
         self.driver.get(self.base_url)
-        time.sleep(1)
+        time.sleep(0.5)
         print("회원가입 버튼 클릭")
         self._shadow_click('ahthentik_sso_btn')
 
-        time.sleep(1)
+        time.sleep(0.5)
         print("검증단계 진행")
         try:
             self.wait.until(EC.url_contains("9000"))
@@ -215,7 +215,7 @@ class DevFlowTestRunner:
         print(f"생성된 계정 정보 | ID: {username} / PW: {password} / Email: {email}")
 
         self.driver.get(self.base_url)
-        time.sleep(1)
+        time.sleep(0.5)
         print("로그인 버튼 클릭")
         self._shadow_click('ahthentik_sso_btn')
         self._shadow_click('submit')
@@ -232,14 +232,14 @@ class DevFlowTestRunner:
             print("✅ Pass: 가입 성공 (리디렉션 완료)")
         else:
             print(f"❌ Fail: 가입 실패 (URL: {self.driver.current_url})")
-        time.sleep(1)
+        time.sleep(0.5)
         self.driver.delete_all_cookies()
         self.driver.execute_script("window.localStorage.clear();")
 
     def tc_03_signup_duplicate(self):
         print("\n[TC-03] 중복 가입 방지 테스트")
         self.driver.get(self.base_url)
-        time.sleep(1)
+        time.sleep(0.5)
         print("SSO로그인 버튼 클릭")
         self._shadow_click('ahthentik_sso_btn')
         self._shadow_click('submit')
@@ -254,7 +254,7 @@ class DevFlowTestRunner:
         self._shadow_fill('password', existing_password)
         self._shadow_fill('password_rep', existing_password)
         self._shadow_click('submit_btn')
-        time.sleep(1)
+        time.sleep(0.5)
         print("결과 확인 중...")
         current = self.driver.current_url
         if "9000" in current:   
@@ -268,7 +268,7 @@ class DevFlowTestRunner:
     def tc_04_password_fail(self):
         print("\n[TC-04] 로그인 비밀번호 실패 테스트")
         self.driver.get(self.base_url)
-        time.sleep(1)
+        time.sleep(0.5)
         print("SSO로그인 버튼 클릭")
         self._click("//button[contains(., 'SSO')]")
         
@@ -285,7 +285,7 @@ class DevFlowTestRunner:
             "ak-flow-input-password > ak-form-element", 
             "p.pf-c-form__helper-text"  # 혹은 "div > p" (에러 메시지 태그)
         ]
-        time.sleep(1)
+        time.sleep(0.5)
         error_element = self.get_shadow_element_v4(target_path)
         if error_element:
             error_text = error_element.text
@@ -302,27 +302,27 @@ class DevFlowTestRunner:
     def tc_05_login(self):
         print("\n[TC-05] 로그인 테스트")
         self.driver.get(self.base_url)
-        time.sleep(1)
+        time.sleep(0.5)
 
         print("SSO로그인 버튼 클릭")
         self._click("//button[contains(., 'SSO')]")
         print("이메일, 비밀번호 입력 후 로그인 시도")
-        time.sleep(1)
+        time.sleep(0.5)
         # 3. [핵심] 헬퍼 함수로 입력 (Shadow DOM 뚫고 입력함)
         print(f"👉 로그인 시도: {self.existing_email}")
         # 주소록에 적은 'login_email' 키를 사용
         self._shadow_fill('login_email', self.existing_email)
         self._shadow_click('login_submit')
-        time.sleep(1)
+        time.sleep(0.5)
         self._shadow_fill('login_password', self.existing_password)
         self._shadow_click('end_login_submit')
         # 5. 검증
-        time.sleep(1)
+        time.sleep(0.5)
         if "9000" not in self.driver.current_url:
             print("✅ Pass: 로그인 성공")
         else:
             print(f"❌ Fail: 로그인 실패 (URL: {self.driver.current_url})")
-        time.sleep(1)    
+        time.sleep(0.5)    
 
         self.driver.delete_all_cookies()
         self.driver.execute_script("window.localStorage.clear();")
@@ -330,17 +330,17 @@ class DevFlowTestRunner:
     def tc_06_profile(self):
         print("\n[TC-06] 프로필 수정 테스트")
         self.driver.get(self.base_url)
-        time.sleep(1)
+        time.sleep(0.5)
 
         print(f"👉 로그인 시도: {self.existing_email}")
         print("로그인")
-        time.sleep(1)
+        time.sleep(0.5)
         self._shadow_fill('login_main_email', self.existing_email)
         self._shadow_fill('login_main_password', self.existing_password)
         self._shadow_click('login_main_submit')
-        time.sleep(1)
+        time.sleep(0.5)
         print("대시보드 도달 확인")
-        time.sleep(3)
+        time.sleep(0.5)
         try:
             # ==========================================================
             print("👉 1. 상단 계정 아이콘 클릭")
@@ -348,20 +348,20 @@ class DevFlowTestRunner:
             avatar_selector = ".q-avatar" 
             avatar_btn = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, avatar_selector)))
             avatar_btn.click()
-            time.sleep(1) # 메뉴가 펼쳐질 때까지 잠시 대기
+            time.sleep(0.5) # 메뉴가 펼쳐질 때까지 잠시 대기
 
             print("👉 2. 메뉴에서 Profile 클릭")
             
             menu_text = "Profile"
             profile_menu = self.driver.find_element(By.XPATH, f"//div[contains(text(), '{menu_text}')]")
             profile_menu.click()
-            time.sleep(1) # 페이지 이동 대기
+            time.sleep(0.5) # 페이지 이동 대기
 
             edit_profile = "Edit Profile"
 
             edit_profile_block = self.driver.find_element(By.XPATH, f"//span[contains(., '{edit_profile}')]")
             edit_profile_block.click()
-            time.sleep(1)
+            time.sleep(0.5)
             # ==========================================================
             fake = Faker('ko_KR')# 한국어 전화번호 생성기
             new_phone = fake.numerify(text='010-####-####')# 새로운 전화번호 생성
@@ -375,7 +375,7 @@ class DevFlowTestRunner:
             full_name.send_keys(Keys.CONTROL + "a")
             full_name.send_keys(Keys.DELETE)
             full_name.send_keys(self.fake.name())# 이름 재입력
-            time.sleep(1)
+            time.sleep(0.5)
             # 3단계: 저장(Update) 버튼 클릭
             # ==========================================================
             print("👉 4. Update 버튼 클릭")
@@ -384,11 +384,11 @@ class DevFlowTestRunner:
             update_btn.click()
             # ==========================================================
             print("👉 5. 'updated successfully' 메시지 확인 중...")
-            time.sleep(1)
+            time.sleep(0.5)
             # 화면 전체에서 해당 텍스트가 떴는지 찾습니다. (토스트 메시지 감지)
             body_text = self.driver.find_element(By.TAG_NAME, "body").text # <body> 전체 텍스트
 
-            time.sleep(1)
+            time.sleep(0.5)
             if "updated successfully" in body_text:
                 print("✅ Pass: 성공 메시지 확인됨")
             else:
@@ -404,7 +404,7 @@ class DevFlowTestRunner:
         print("쿠키 삭제됨")
         self.driver.get(self.base_url)
         print("\n[TC-08] 팀 필드 테스트")
-        time.sleep(1)
+        time.sleep(0.5)
         team_name = f"{self.fake.color_name()} 프로젝트"
         self._shadow_fill('login_main_email', self.existing_email)
         self._shadow_fill('login_main_password', self.existing_password)
@@ -412,14 +412,14 @@ class DevFlowTestRunner:
 
         print("\n[TC-07] 팀 생성 및 멤버 초대 테스트")
         print("대시보드 도달 확인")
-        time.sleep(1)
+        time.sleep(0.5)
         print("사이드바에서 'Teams' 메뉴 클릭")
         self._shadow_click("menu_teams")
-        time.sleep(1)
+        time.sleep(0.5)
         print("'new Team' 버튼 클릭")
         new_team_span = self.driver.find_element(By.XPATH, "//span[contains(text(), 'New Team')]")
         new_team_span.click()
-        time.sleep(1)
+        time.sleep(0.5)
         print("팀 이름 입력")
         team_name_input = self.driver.find_element(By.XPATH, "//input[@aria-label='Team Name *']")
         team_name_input.send_keys(team_name)
@@ -427,18 +427,18 @@ class DevFlowTestRunner:
         print("팀 멤버 검색시도: {test123}")
         self.driver.find_element(By.XPATH, "//input[@aria-label='Select Initial Members']")
         self._shadow_fill("//input[@aria-label='Select Initial Members']", target_member)
-        time.sleep(1)
+        time.sleep(0.5)
         try:
             self._click(f"//div[@role='listbox']//div[contains(text(), '{target_member}')]")
             print("맴버선택완료")
         except:
             print("맴버선택실패")
             self._click("//span[contains(text(), 'Create')]")
-        time.sleep(1)
+        time.sleep(0.5)
         print("팀 생성 버튼 클릭")
         self._click("//span[contains(text(), 'Create')]")
 
-        time.sleep(1)
+        time.sleep(0.5)
         if team_name in self.driver.page_source:
             print(f"✅ Pass: {team_name}")
         else:
@@ -450,19 +450,19 @@ class DevFlowTestRunner:
     def tc_08_projectfeild(self):
         print("프로젝트 필드 입력 테스트")
         self.driver.get(self.base_url)
-        time.sleep(1)
+        time.sleep(0.5)
         self._shadow_fill('login_main_email', self.existing_email)
         self._shadow_fill('login_main_password', self.existing_password)
         self._shadow_click('login_main_submit')
         print("대시보드 도달 확인")
-        time.sleep(1)
+        time.sleep(0.5)
         print("사이드바에서 'Projects' 메뉴 클릭")
         self._shadow_click("menu_projects")
-        time.sleep(1)
+        time.sleep(0.5)
         print("'New Project' 버튼 클릭")
         new_project_span = self.driver.find_element(By.XPATH, "//span[contains(text(), 'New Project')]")
         new_project_span.click()
-        time.sleep(1)
+        time.sleep(0.5)
         project_name = f"{self.fake.color_name()} 개발 프로젝트"
         print("프로젝트 이름 입력")
         project_name_input = self.driver.find_element(By.XPATH, "//input[@aria-label='프로젝트 이름 *']")
@@ -474,13 +474,13 @@ class DevFlowTestRunner:
         print("프로젝트 팀 선택")# 클릭해서 드롭다운 열기
         project_team_select = "//div[contains(@class, 'q-field__control') and .//div[contains(., 'Team *')]]"# XPath 수정
         self._click(project_team_select)# 클릭해서 드롭다운 열기
-        time.sleep(1)# 대기
+        time.sleep(0.5)# 대기
         option_xpath = "//div[@role='option']//span[contains(text(), 'test')]"
         self._click(option_xpath)
-        time.sleep(1)
+        time.sleep(0.5)
         print("프로젝트 생성 버튼 클릭")
         self._click("//span[contains(text(), 'Create')]")
-        time.sleep(1)
+        time.sleep(0.5)
         if project_name in self.driver.page_source:
             print(f"✅ Pass: {project_name}")
         else:
@@ -492,44 +492,44 @@ class DevFlowTestRunner:
     def tc_09_sprint(self):
         print("\n[TC-09] 스프린트 생성 테스트")
         self.driver.get(self.base_url)
-        time.sleep(1)
+        time.sleep(0.5)
         self._shadow_fill('login_main_email', self.existing_email)
         self._shadow_fill('login_main_password', self.existing_password)
         self._shadow_click('login_main_submit')
         print("대시보드 도달 확인")
-        time.sleep(1)   
+        time.sleep(0.5)   
         print("사이드바에서 Sprints 메뉴 클릭")
         self._shadow_click("//div[@role='listitem' and contains(., 'Sprints')]")
-        time.sleep(1)
+        time.sleep(0.5)
         print("'New Sprint' 버튼 클릭")
         new_sprint_span = self.driver.find_element(By.XPATH, "//span[contains(text(), 'New Sprint')]")
         new_sprint_span.click()
-        time.sleep(1)
+        time.sleep(0.5)
         print("프로젝트 선택")
         project_select = "//div[contains(@class, 'q-field__control') and .//div[contains(., 'Project *')]]"
         self._click(project_select)
-        time.sleep(1)
+        time.sleep(0.5)
         option_xpath = "//div[@role='option']//span[contains(text(), 'test')]"
         self._click(option_xpath)
-        time.sleep(1)
+        time.sleep(0.5)
         print("스프린트 이름 입력")
         sprint_name = f"{self.fake.color_name()} 스프린트"
         sprint_name_input = self.driver.find_element(By.XPATH, "//input[@aria-label='Sprint Name *']")
         sprint_name_input.send_keys(sprint_name)
-        time.sleep(1)
+        time.sleep(0.5)
         print("status 선택")
         status_xpath = self._click("//i[contains(text(), 'event_note')]")
         self._click(status_xpath)
-        time.sleep(1)
+        time.sleep(0.5)
         active_ele = self.driver.switch_to.active_element
         active_ele.send_keys(Keys.ARROW_UP)
         time.sleep(0.5)
         active_ele.send_keys(Keys.ENTER)
-        time.sleep(1)
+        time.sleep(0.5)
 
         print("스프린트 생성 버튼 클릭")
         self._click("//span[contains(text(), 'Create')]")
-        time.sleep(1)
+        time.sleep(0.5)
         if sprint_name in self.driver.page_source:
             print(f"✅ Pass: {sprint_name}")
         else:
@@ -541,41 +541,41 @@ class DevFlowTestRunner:
     def tc_10_issue(self):
         print("\n[TC-10] 이슈 생성 테스트")
         self.driver.get(self.base_url)
-        time.sleep(1)
+        time.sleep(0.5)
         self._shadow_fill('login_main_email', self.existing_email)
         self._shadow_fill('login_main_password', self.existing_password)
         self._shadow_click('login_main_submit')
         print("대시보드 도달 확인")
-        time.sleep(1)
+        time.sleep(0.5)
         print("사이드바에서 Issues 메뉴 클릭")
         self._shadow_click("//div[@role='listitem' and contains(., 'Issues')]")
-        time.sleep(1)
+        time.sleep(0.5)
         print("'New Issue' 버튼 클릭")
         new_issue_span = self.driver.find_element(By.XPATH, "//span[contains(text(), 'New Issue')]")
         new_issue_span.click()
-        time.sleep(1)
+        time.sleep(0.5)
         print("이슈 제목 입력")
         issue_title = f"{self.fake.color_name()} 버그 이슈"
         issue_title_input = self.driver.find_element(By.XPATH, "//input[@aria-label='Title *']")
         issue_title_input.send_keys(issue_title)
-        time.sleep(1)
+        time.sleep(0.5)
         print("프로젝트 선택")
         project_select = "//div[contains(@class, 'q-field__control') and .//div[contains(., 'Project *')]]"
         self._click(project_select)
-        time.sleep(1)
+        time.sleep(0.5)
         option_xpath = "//div[@role='option']//span[contains(text(), 'test')]"
         self._click(option_xpath)
-        time.sleep(1)
+        time.sleep(0.5)
         print("이슈 타입 선택")
         issue_type_select = "//div[contains(@class, 'q-field__control') and .//div[contains(., 'Type *')]]"
         self._click(issue_type_select)
-        time.sleep(1)
+        time.sleep(0.5)
         issue_type_option = "//div[@role='option']//span[contains(text(), 'Bug')]"
         self._click(issue_type_option)
-        time.sleep(1)
+        time.sleep(0.5)
         print("이슈 생성 버튼 클릭")
         self._click("//span[contains(text(), 'Create')]")
-        time.sleep(1)
+        time.sleep(0.5)
         if issue_title in self.driver.page_source:
             print(f"✅ Pass: {issue_title}")
         else:
@@ -586,20 +586,20 @@ class DevFlowTestRunner:
     def tc_11_kanbanboard(self):
         print("\n[TC-11] 칸반보드 테스트")
         self.driver.get(self.base_url)
-        time.sleep(1)
+        time.sleep(0.5)
         self._shadow_fill('login_main_email', self.existing_email)
         self._shadow_fill('login_main_password', self.existing_password)
         self._shadow_click('login_main_submit')
         print("대시보드 도달 확인")
-        time.sleep(1)
+        time.sleep(0.5)
         print("사이드바에서 Kanban Board 메뉴 클릭")
         self._shadow_click("//div[@role='listitem' and contains(., 'Kanban Board')]")
-        time.sleep(1)
+        time.sleep(0.5)
         source = self.driver.find_element(By.XPATH, "//div[contains(text(), 'test')]")
         target = self.driver.find_element(By.XPATH, "//div[contains(text(), 'In Progress')]/ancestor::div[contains(@class, 'column')]")
         actions = ActionChains(self.driver)
         actions.drag_and_drop(source, target).perform()
-        time.sleep(1)
+        time.sleep(0.5)
         assert "test" in self.driver.find_element(By.XPATH, "//div[contains(@class, 'q-card') and contains(., 'In Progress')]").text
         print("✅ 검증 완료 : 이슈가 'In Progress' 칼럼으로 이동됨")
         self.driver.delete_all_cookies()
@@ -608,28 +608,30 @@ class DevFlowTestRunner:
     def tc_12_logout(self):
         print("\n[TC-12] 로그아웃 테스트")
         self.driver.get(self.base_url)
-        time.sleep(1)
+        time.sleep(0.5)
         self._shadow_fill('login_main_email', self.existing_email)
         self._shadow_fill('login_main_password', self.existing_password)
         self._shadow_click('login_main_submit')
         print("대시보드 도달 확인")
-        time.sleep(5)
+        time.sleep(0.5)
         print("상단 계정 아이콘 클릭")
         avatar_selector = ".q-avatar" 
         avatar_btn = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, avatar_selector)))
         avatar_btn.click()
-        time.sleep(1) # 메뉴가 펼쳐질 때까지 잠시 대기
+        time.sleep(0.5) # 메뉴가 펼쳐질 때까지 잠시 대기
 
         print("메뉴에서 Logout 클릭")
         menu_text = "Logout"
         logout_menu = self.driver.find_element(By.XPATH, f"//div[contains(text(), '{menu_text}')]")
         logout_menu.click()
-        time.sleep(1) # 페이지 이동 대기
+        time.sleep(0.5) # 페이지 이동 대기
 
         print("로그아웃 후 로그인 페이지 도달 확인")
-        time.sleep(1)
+        time.sleep(0.5)
         if "login" in self.driver.current_url:
             print("✅ Pass: 로그아웃 성공")
+
+
 
 
 # =================================================================
