@@ -1,0 +1,14 @@
+# Python 관련 무시 파일
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pytest 관련 무시 파일
+.pytest_cache/
+
+# 환경 설정 파일 (비밀번호 들어있을 수 있으므로 무시)
+config.py
+.env
+
+# 로그 파일 등
+*.log

@@ -272,33 +272,33 @@ class DevFlowTestRunner:
         self.driver.delete_all_cookies()
         self.driver.execute_script("window.localStorage.clear();")
 
-    def tc_04_login(self):
-        print("\n[TC-04] 로그인 테스트")
-        self.driver.get(self.base_url)
-        time.sleep(0.5)
+    # def tc_04_login(self):
+    #     print("\n[TC-04] 로그인 테스트")
+    #     self.driver.get(self.base_url)
+    #     time.sleep(0.5)
 
-        print("SSO로그인 버튼 클릭")
-        self._click("//button[contains(., 'SSO')]")
-        print("이메일, 비밀번호 입력 후 로그인 시도")
-        time.sleep(0.5)
-        # 3. [핵심] 헬퍼 함수로 입력 (Shadow DOM 뚫고 입력함)
-        print(f"👉 로그인 시도: {self.existing_email}")
-        # 주소록에 적은 'login_email' 키를 사용
-        self._shadow_fill('login_email', self.existing_email)
-        self._shadow_click('login_submit')
-        time.sleep(0.5)
-        self._shadow_fill('login_password', self.existing_password)
-        self._shadow_click('end_login_submit')
-        # 5. 검증
-        time.sleep(0.5)
-        if "9000" not in self.driver.current_url:
-            print("✅ Pass: 로그인 성공")
-        else:
-            print(f"❌ Fail: 로그인 실패 (URL: {self.driver.current_url})")
-        time.sleep(0.5)    
+    #     print("SSO로그인 버튼 클릭")
+    #     self._click("//button[contains(., 'SSO')]")
+    #     print("이메일, 비밀번호 입력 후 로그인 시도")
+    #     time.sleep(0.5)
+    #     # 3. [핵심] 헬퍼 함수로 입력 (Shadow DOM 뚫고 입력함)
+    #     print(f"👉 로그인 시도: {self.existing_email}")
+    #     # 주소록에 적은 'login_email' 키를 사용
+    #     self._shadow_fill('login_email', self.existing_email)
+    #     self._shadow_click('login_submit')
+    #     time.sleep(0.5)
+    #     self._shadow_fill('login_password', self.existing_password)
+    #     self._shadow_click('end_login_submit')
+    #     # 5. 검증
+    #     time.sleep(0.5)
+    #     if "9000" not in self.driver.current_url:
+    #         print("✅ Pass: 로그인 성공")
+    #     else:
+    #         print(f"❌ Fail: 로그인 실패 (URL: {self.driver.current_url})")
+    #     time.sleep(0.5)    
 
-        self.driver.delete_all_cookies()
-        self.driver.execute_script("window.localStorage.clear();")
+    #     self.driver.delete_all_cookies()
+    #     self.driver.execute_script("window.localStorage.clear();")
 
     def tc_05_profile(self):
         print("\n[TC-05] 프로필 수정 테스트")

@@ -3,7 +3,12 @@ import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
-from config.config import Config
+from src.config.config import Config
+from faker import Faker
+
+@pytest.fixture(scope="session")
+def fake():
+    return Faker("ko_KR")
 
 @pytest.fixture(scope="function")
 def driver():
