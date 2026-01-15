@@ -3,9 +3,9 @@
 
 ## 📌 Project Overview
 
-이 프로젝트는 웹 애플리케이션 ERP의 핵심 기능을 검증하기 위해 설계된 Python 기반 E2E(End-to-End) 자동화 테스트 솔루션입니다. 단순한 녹화/재생 방식이 아닌, Page Object Model(POM) 설계 패턴을 고려한 구조와 재귀적 탐색 알고리즘을 통해 유지보수성이 높고 견고한 테스트 코드를 구현했습니다.
+이 프로젝트는 웹 애플리케이션 ERP의 핵심 기능을 검증하기 위해 설계된 Python 기반 E2E(End-to-End) 자동화 테스트 솔루션입니다. 
 
-특히, 자동화가 까다로운 Shadow DOM 내부 요소 제어와 Drag & Drop 인터랙션을 완벽하게 구현하여 수동 테스트 시간을 획기적으로 단축하는 것을 목표로 했습니다.
+특히, 자동화가 까다로운 Shadow DOM 내부 요소 제어와 Drag & Drop 인터랙션을 구현하여 수동 테스트 시간을 단축하는 것을 목표로 했습니다.
 
 ## 🎥 Demo Preview
 
@@ -22,7 +22,7 @@
 
 - 문제: Authentik SSO 로그인 페이지와 같은 최신 웹 컴포넌트들이 Shadow Root로 캡슐화되어 있어 일반적인 Selenium find_element로는 접근이 불가능했습니다.
 
-- 해결: 재귀 함수(get_shadow_element_v4)를 직접 구현하여, 중첩된 Shadow DOM(Nested Shadow Roots)을 뚫고 들어가 요소를 찾아내도록 로직을 설계했습니다.
+- 해결: 재귀 함수(get_shadow_element_v4)를 구현하여, 중첩된 Shadow DOM(Nested Shadow Roots)을 뚫고 들어가 요소를 찾아내도록 로직을 설계했습니다.
 
 **2. Complex User Interactions (Drag & Drop)**
 
@@ -36,11 +36,8 @@
 
 - 효과: 매번 새로운 사용자 이름, 이메일, 프로젝트 키를 생성하여 독립적인 테스트 환경을 보장합니다.
 
-**4. Robust Sync Strategy (동기화 전략)**
 
-- 기술: time.sleep을 최소화하고 WebDriverWait와 ExpectedConditions(EC)를 적극 사용하여, 네트워크 속도나 렌더링 지연에 상관없이 테스트가 안정적으로 수행되도록 구현했습니다.
-
-**5. Test Isolation & State Management (테스트 격리 및 상태 관리)**
+**4. Test Isolation & State Management (테스트 격리 및 상태 관리)**
 
 - 문제: E2E 테스트 특성상 이전 테스트의 로그인 세션이나 데이터가 남아있으면 다음 테스트가 실패(Flaky Test)할 가능성이 높았습니다.
 
