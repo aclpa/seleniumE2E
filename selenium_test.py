@@ -178,65 +178,65 @@ class DevFlowTestRunner:
     # =================================================================
     # ======================== 테스트 케이스들 =========================
         
-    def tc_01_signup(self):
-        print("\n[TC-01] 회원가입 성공 테스트")
-        print("가입 폼 작성 중...")
-        email = self.fake.free_email()
-        username = self.fake.user_name()
-        password = self.fake.password(length=6)
-        print(f"생성된 계정 정보 | ID: {username} / PW: {password} / Email: {email}")
+    # def tc_01_signup(self):
+    #     print("\n[TC-01] 회원가입 성공 테스트")
+    #     print("가입 폼 작성 중...")
+    #     email = self.fake.free_email()
+    #     username = self.fake.user_name()
+    #     password = self.fake.password(length=6)
+    #     print(f"생성된 계정 정보 | ID: {username} / PW: {password} / Email: {email}")
 
-        self.driver.get(self.base_url)
-        time.sleep(10)
-        time.sleep(0.5)
-        print("로그인 버튼 클릭")
-        self._shadow_click('ahthentik_sso_btn')
-        self._shadow_click('submit')
+    #     self.driver.get(self.base_url)
+    #     time.sleep(10)
+    #     time.sleep(0.5)
+    #     print("로그인 버튼 클릭")
+    #     self._shadow_click('ahthentik_sso_btn')
+    #     self._shadow_click('submit')
         
-        print("정보 입력 중...")
-        self._shadow_fill('username', username)
-        self._shadow_fill('password', password)
-        self._shadow_fill('password_rep', password)
-        self._shadow_fill('email', email)
-        self._shadow_click('submit_btn')
-        time.sleep(2)
-        current = self.driver.current_url
-        if "9000" not in current and "8080" in current:
-            print("✅ Pass: 가입 성공 (리디렉션 완료)")
-        else:
-            print(f"❌ Fail: 가입 실패 (URL: {self.driver.current_url})")
-        time.sleep(0.5)
-        self.driver.delete_all_cookies()
-        self.driver.execute_script("window.localStorage.clear();")
+    #     print("정보 입력 중...")
+    #     self._shadow_fill('username', username)
+    #     self._shadow_fill('password', password)
+    #     self._shadow_fill('password_rep', password)
+    #     self._shadow_fill('email', email)
+    #     self._shadow_click('submit_btn')
+    #     time.sleep(2)
+    #     current = self.driver.current_url
+    #     if "9000" not in current and "8080" in current:
+    #         print("✅ Pass: 가입 성공 (리디렉션 완료)")
+    #     else:
+    #         print(f"❌ Fail: 가입 실패 (URL: {self.driver.current_url})")
+    #     time.sleep(0.5)
+    #     self.driver.delete_all_cookies()
+    #     self.driver.execute_script("window.localStorage.clear();")
 
-    def tc_02_signup_duplicate(self):
-        print("\n[TC-02] 중복 가입 방지 테스트")
-        self.driver.get(self.base_url)
-        time.sleep(0.5)
-        print("SSO로그인 버튼 클릭")
-        self._shadow_click('ahthentik_sso_btn')
-        self._shadow_click('submit')
+    # def tc_02_signup_duplicate(self):
+    #     print("\n[TC-02] 중복 가입 방지 테스트")
+    #     self.driver.get(self.base_url)
+    #     time.sleep(0.5)
+    #     print("SSO로그인 버튼 클릭")
+    #     self._shadow_click('ahthentik_sso_btn')
+    #     self._shadow_click('submit')
 
-        print("이미 가입된 이메일로 가입 시도")
-        existing_email = "test123@test.com"
-        existing_username = "test123"
-        existing_password = "test123"
-        print(f"가입 시도: {existing_username} / {existing_email}")
-        self._shadow_fill('username', existing_username)
-        self._shadow_fill('email', existing_email)
-        self._shadow_fill('password', existing_password)
-        self._shadow_fill('password_rep', existing_password)
-        self._shadow_click('submit_btn')
-        time.sleep(0.5)
-        print("결과 확인 중...")
-        current = self.driver.current_url
-        if "9000" in current:   
-             print(f"✅ Pass: 중복 가입이 잘 막혔습니다. (현재 주소 유지됨)")
-        else:
-             print(f"❌ Fail: 중복인데 가입이 되어버렸습니다! (URL: {current})")
+    #     print("이미 가입된 이메일로 가입 시도")
+    #     existing_email = "test123@test.com"
+    #     existing_username = "test123"
+    #     existing_password = "test123"
+    #     print(f"가입 시도: {existing_username} / {existing_email}")
+    #     self._shadow_fill('username', existing_username)
+    #     self._shadow_fill('email', existing_email)
+    #     self._shadow_fill('password', existing_password)
+    #     self._shadow_fill('password_rep', existing_password)
+    #     self._shadow_click('submit_btn')
+    #     time.sleep(0.5)
+    #     print("결과 확인 중...")
+    #     current = self.driver.current_url
+    #     if "9000" in current:   
+    #          print(f"✅ Pass: 중복 가입이 잘 막혔습니다. (현재 주소 유지됨)")
+    #     else:
+    #          print(f"❌ Fail: 중복인데 가입이 되어버렸습니다! (URL: {current})")
 
-        self.driver.delete_all_cookies()
-        self.driver.execute_script("window.localStorage.clear();")
+    #     self.driver.delete_all_cookies()
+    #     self.driver.execute_script("window.localStorage.clear();")
 
     def tc_03_password_fail(self):
         print("\n[TC-03] 로그인 비밀번호 실패 테스트")

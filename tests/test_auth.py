@@ -47,6 +47,29 @@ def test_signup_existing_email(driver): #tc_02
     print("✅ 기존 이메일 가입 방지 기능 확인 완료")
 
 
+def test_signup_password_mismatch(driver): #tc_03
+    print("\n[TC-03] 비밀번호 불일치 로그인 테스트")
+    # 1. 페이지 객체 생성
+    login_page = LoginPage(driver)
+
+
+    # 2. 데이터 준비 (비밀번호 불일치 상황 만들기)
+    valid_email = Config.TEST_EMAIL      # 설정 파일에 있는 진짜 이메일
+    wrong_password = "WrongPassword123!" # 아무거나 틀린 비밀번호
+
+    print(f"생성된 회원정보 - 이메일: {valid_email}, 비밀번호: Password123!")
+
+    # 3. 로직 수행
+    login_page.login(valid_email, wrong_password)
+
+    # 4. 검증 (에러 메시지 확인)
+    error_msg = login_page.login_error_text()
+    print("에러 메시지 :", error_msg)
+    # 'Invalid'라는 단어가 포함되어 있는지 확인
+    assert "Invalid" in error_msg or "password" in error_msg    
+    print("✅ 기존 이메일 가입 방지 기능 확인 완료")
+
+
 
 def test_login_success(driver):#tc_04
     print("\n[TC-04] 로그인 테스트")
