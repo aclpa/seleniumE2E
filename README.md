@@ -11,8 +11,7 @@
 
 ### **TC 이미지를 클릭하면 시연 영상을 볼 수 있습니다.**
 [![테스트 결과 화면](/media/seleniumtc.png)](https://youtu.be/uwcIr0_jezI?si=90FvkfzObSI7YHkc)
-## 테스트 로그
-![alt text](media/image.png)
+
 
 ## 💡 Key Features & Challenges Solved
 
