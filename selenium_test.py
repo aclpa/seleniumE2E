@@ -529,11 +529,58 @@ class DevFlowTestRunner:
         print("스프린트 생성 버튼 클릭")
         self._click("//span[contains(text(), 'Create')]")
         time.sleep(1)
+        if sprint_name in self.driver.page_source:
+            print(f"✅ Pass: {sprint_name}")
+        else:
+            print(f"❌ Fail: {sprint_name} 없음")
 
         self.driver.delete_all_cookies()
         self.driver.execute_script("window.localStorage.clear();")
 
-
+    def tc_10_issue(self):
+        print("\n[TC-10] 이슈 생성 테스트")
+        self.driver.get(self.base_url)
+        time.sleep(1)
+        self._shadow_fill('login_main_email', self.existing_email)
+        self._shadow_fill('login_main_password', self.existing_password)
+        self._shadow_click('login_main_submit')
+        print("대시보드 도달 확인")
+        time.sleep(1)
+        print("사이드바에서 Issues 메뉴 클릭")
+        self._shadow_click("//div[@role='listitem' and contains(., 'Issues')]")
+        time.sleep(1)
+        print("'New Issue' 버튼 클릭")
+        new_issue_span = self.driver.find_element(By.XPATH, "//span[contains(text(), 'New Issue')]")
+        new_issue_span.click()
+        time.sleep(1)
+        print("이슈 제목 입력")
+        issue_title = f"{self.fake.color_name()} 버그 이슈"
+        issue_title_input = self.driver.find_element(By.XPATH, "//input[@aria-label='Title *']")
+        issue_title_input.send_keys(issue_title)
+        time.sleep(1)
+        print("프로젝트 선택")
+        project_select = "//div[contains(@class, 'q-field__control') and .//div[contains(., 'Project *')]]"
+        self._click(project_select)
+        time.sleep(1)
+        option_xpath = "//div[@role='option']//span[contains(text(), 'test')]"
+        self._click(option_xpath)
+        time.sleep(1)
+        print("이슈 타입 선택")
+        issue_type_select = "//div[contains(@class, 'q-field__control') and .//div[contains(., 'Type *')]]"
+        self._click(issue_type_select)
+        time.sleep(1)
+        issue_type_option = "//div[@role='option']//span[contains(text(), 'Bug')]"
+        self._click(issue_type_option)
+        time.sleep(1)
+        print("이슈 생성 버튼 클릭")
+        self._click("//span[contains(text(), 'Create')]")
+        time.sleep(1)
+        if issue_title in self.driver.page_source:
+            print(f"✅ Pass: {issue_title}")
+        else:
+            print(f"❌ Fail: {issue_title} 없음")
+        self.driver.delete_all_cookies()
+        self.driver.execute_script("window.localStorage.clear();")
 
 
 
@@ -551,6 +598,7 @@ if __name__ == "__main__":
         "tc_07_teamfeild",  
         "tc_08_projectfeild",
         "tc_09_sprint",
+        "tc_10_issue",
 
     ]
 
