@@ -26,18 +26,6 @@ Driver		webdriver-manager를 통한 드라이버 버전 자동 관리
 
 해결: 재귀 함수(get_shadow_element_v4)를 직접 구현하여, 중첩된 Shadow DOM(Nested Shadow Roots)을 뚫고 들어가 요소를 찾아내도록 로직을 설계했습니다.
 
-코드 하이라이트:
-
-Python
-
-# 다중 Shadow Root를 뚫고 들어가는 재귀 탐색 로직
-def get_shadow_element_v4(self, selectors):
-    element = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selectors[0])))
-    for selector in selectors[1:]:
-        shadow_root = element.shadow_root
-        # ... (Retry Logic) ...
-        element = shadow_root.find_element(By.CSS_SELECTOR, selector)
-    return element
 2. Complex User Interactions (Drag & Drop)
 
 기능: 칸반 보드(Kanban Board)에서 이슈 카드를 이동시키는 시나리오 구현.
