@@ -181,32 +181,9 @@ class DevFlowTestRunner:
     # =================================================================
     # =================================================================
     # ======================== 테스트 케이스들 =========================
-
-    def tc_01_authentik(self):
-        print("[TC-01] 회원가입 테스트")
-        print("localhost:8080 페이지 이동")
-        self.driver.get(self.base_url)
-        time.sleep(0.5)
-        print("회원가입 버튼 클릭")
-        self._shadow_click('ahthentik_sso_btn')
-
-        time.sleep(0.5)
-        print("검증단계 진행")
-        try:
-            self.wait.until(EC.url_contains("9000"))
-            current_url = self.driver.current_url
-            if"9000" in current_url:
-                print("회원가입 페이지 도달 확인")
-            else:
-                raise Exception("회원가입 페이지로 이동하지 못함")
-        except Exception as e:
-            raise Exception(f"회원가입 테스트 실패: {e}")   
-         
-        self.driver.delete_all_cookies()
-        self.driver.execute_script("window.localStorage.clear();")
         
-    def tc_02_signup(self):
-        print("\n[TC-02] 회원가입 성공 테스트")
+    def tc_01_signup(self):
+        print("\n[TC-01] 회원가입 성공 테스트")
 
         print("가입 폼 작성 중...")
         email = self.fake.free_email()
@@ -236,8 +213,8 @@ class DevFlowTestRunner:
         self.driver.delete_all_cookies()
         self.driver.execute_script("window.localStorage.clear();")
 
-    def tc_03_signup_duplicate(self):
-        print("\n[TC-03] 중복 가입 방지 테스트")
+    def tc_02_signup_duplicate(self):
+        print("\n[TC-02] 중복 가입 방지 테스트")
         self.driver.get(self.base_url)
         time.sleep(0.5)
         print("SSO로그인 버튼 클릭")
@@ -265,8 +242,8 @@ class DevFlowTestRunner:
         self.driver.delete_all_cookies()
         self.driver.execute_script("window.localStorage.clear();")
 
-    def tc_04_password_fail(self):
-        print("\n[TC-04] 로그인 비밀번호 실패 테스트")
+    def tc_03_password_fail(self):
+        print("\n[TC-03] 로그인 비밀번호 실패 테스트")
         self.driver.get(self.base_url)
         time.sleep(0.5)
         print("SSO로그인 버튼 클릭")
@@ -299,8 +276,8 @@ class DevFlowTestRunner:
         self.driver.delete_all_cookies()
         self.driver.execute_script("window.localStorage.clear();")
 
-    def tc_05_login(self):
-        print("\n[TC-05] 로그인 테스트")
+    def tc_04_login(self):
+        print("\n[TC-04] 로그인 테스트")
         self.driver.get(self.base_url)
         time.sleep(0.5)
 
@@ -327,8 +304,8 @@ class DevFlowTestRunner:
         self.driver.delete_all_cookies()
         self.driver.execute_script("window.localStorage.clear();")
 
-    def tc_06_profile(self):
-        print("\n[TC-06] 프로필 수정 테스트")
+    def tc_05_profile(self):
+        print("\n[TC-05] 프로필 수정 테스트")
         self.driver.get(self.base_url)
         time.sleep(0.5)
 
@@ -400,10 +377,9 @@ class DevFlowTestRunner:
         self.driver.execute_script("window.localStorage.clear();")
 
 
-    def tc_07_teamfeild(self):
-        print("쿠키 삭제됨")
+    def tc_06_teamfeild(self):
+        print("tc_06 팀필드 제작 테스트")
         self.driver.get(self.base_url)
-        print("\n[TC-08] 팀 필드 테스트")
         time.sleep(0.5)
         team_name = f"{self.fake.color_name()} 프로젝트"
         self._shadow_fill('login_main_email', self.existing_email)
@@ -447,8 +423,8 @@ class DevFlowTestRunner:
         self.driver.delete_all_cookies()
         self.driver.execute_script("window.localStorage.clear();")
 
-    def tc_08_projectfeild(self):
-        print("프로젝트 필드 입력 테스트")
+    def tc_07_projectfeild(self):
+        print("tc_07 프로젝트 필드 입력 테스트")
         self.driver.get(self.base_url)
         time.sleep(0.5)
         self._shadow_fill('login_main_email', self.existing_email)
@@ -489,8 +465,8 @@ class DevFlowTestRunner:
         self.driver.execute_script("window.localStorage.clear();")
 
 
-    def tc_09_sprint(self):
-        print("\n[TC-09] 스프린트 생성 테스트")
+    def tc_08_sprint(self):
+        print("\n[TC-08] 스프린트 생성 테스트")
         self.driver.get(self.base_url)
         time.sleep(0.5)
         self._shadow_fill('login_main_email', self.existing_email)
@@ -538,8 +514,8 @@ class DevFlowTestRunner:
         self.driver.delete_all_cookies()
         self.driver.execute_script("window.localStorage.clear();")
 
-    def tc_10_issue(self):
-        print("\n[TC-10] 이슈 생성 테스트")
+    def tc_09_issue(self):
+        print("\n[TC-09] 이슈 생성 테스트")
         self.driver.get(self.base_url)
         time.sleep(0.5)
         self._shadow_fill('login_main_email', self.existing_email)
@@ -583,8 +559,8 @@ class DevFlowTestRunner:
         self.driver.delete_all_cookies()
         self.driver.execute_script("window.localStorage.clear();")
 
-    def tc_11_kanbanboard(self):
-        print("\n[TC-11] 칸반보드 테스트")
+    def tc_10_kanbanboard(self):
+        print("\n[TC-10] 칸반보드 테스트")
         self.driver.get(self.base_url)
         time.sleep(0.5)
         self._shadow_fill('login_main_email', self.existing_email)
@@ -605,8 +581,8 @@ class DevFlowTestRunner:
         self.driver.delete_all_cookies()
         self.driver.execute_script("window.localStorage.clear();")
 
-    def tc_12_logout(self):
-        print("\n[TC-12] 로그아웃 테스트")
+    def tc_11_logout(self):
+        print("\n[TC-11] 로그아웃 테스트")
         self.driver.get(self.base_url)
         time.sleep(0.5)
         self._shadow_fill('login_main_email', self.existing_email)
@@ -639,18 +615,17 @@ if __name__ == "__main__":
     runner = DevFlowTestRunner()
     
     target_tcs = [
-        "tc_01_authentik",
-        "tc_02_signup",
-        "tc_03_signup_duplicate",
-        "tc_04_password_fail",
-        "tc_05_login",
-        "tc_06_profile",
-        "tc_07_teamfeild",  
-        "tc_08_projectfeild",
-        "tc_09_sprint",
-        "tc_10_issue",
-        "tc_11_kanbanboard",
-        "tc_12_logout",
+        "tc_01_signup",
+        "tc_02_signup_duplicate",
+        "tc_03_password_fail",
+        "tc_04_login",
+        "tc_05_profile",
+        "tc_06_teamfeild",  
+        "tc_07_projectfeild",
+        "tc_08_sprint",
+        "tc_09_issue",
+        "tc_10_kanbanboard",
+        "tc_11_logout",
 
 
 
