@@ -1,6 +1,3 @@
-#python selenium_test.py
-#menu_btn = self.driver.find_element(By.XPATH, "//i[text()='menu']")메뉴버튼 열기
-#menu_btn.click()
 import time
 import sys
 from selenium import webdriver
@@ -93,7 +90,6 @@ class DevFlowTestRunner:
     def teardown(self):
         """테스트 종료: 브라우저 닫기"""
         print("🛑 [Teardown] 브라우저를 닫습니다.")
-        # 3초 뒤에 닫아서 결과 확인할 시간 주기
         time.sleep(0.5)
         self.driver.quit()
     # =================================================================
@@ -102,25 +98,25 @@ class DevFlowTestRunner:
         [엔진] 섀도우 돔을 뚫고 들어가는 재귀 함수 (Retry 로직 포함)
         """
         try:
-            # 1. 첫 번째 관문 (Host)
-            element = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selectors[0])))
+
+            element = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selectors[0])))# 1. 최상위 요소 찾기
 
             # 2. 내부 관문 돌파
-            for selector in selectors[1:]:
-                shadow_root = element.shadow_root
-                found = False
+            for selector in selectors[1:]:# 나머지 셀렉터들에 대해 반복
+                shadow_root = element.shadow_root# 섀도우 루트 접근
+                found = False# 요소 찾기 시도
                 # 타이밍 이슈 해결을 위한 재시도 로직
-                for _ in range(5): # 0.5초 * 5회 = 2.5초 대기
-                    try:
-                        time.sleep(0.5)
-                        element = shadow_root.find_element(By.CSS_SELECTOR, selector)
-                        found = True
-                        break
-                    except:
-                        pass
+                for _ in range(5): # 최대 5회 재시도
+                    try:# 요소 찾기 시도
+                        time.sleep(0.5)# 잠시 대기
+                        element = shadow_root.find_element(By.CSS_SELECTOR, selector)# 내부 요소 찾기
+                        found = True# 성공하면 루프
+                        break# 탈출
+                    except:# 실패하면 재시도
+                        pass# 무시하고 재시도
                 
                 if not found:
-                    raise Exception(f"요소를 찾을 수 없음 (Shadow DOM): {selector}")
+                    raise Exception(f"요소를 찾을 수 없음 (Shadow DOM): {selector}")# 찾지 못했으면 예외 발생
             
             return element
             
@@ -641,8 +637,5 @@ if __name__ == "__main__":
                 print(f"⚠️  경고: {tc_name} 함수가 없습니다.")
     except Exception as e:
         print(f"\n❌ 에러 발생: {e}")
-        # 에러 나면 스크린샷 찍기 (디버깅용)
-        runner.driver.save_screenshot("C:/Users/USER_20220316/Desktop/QA-Portfolio/selenium,screenshot/error_screen.png")
-        print("📸 현재 화면을 'error_screen.png'로 저장했습니다.")
     finally:
         runner.teardown()
