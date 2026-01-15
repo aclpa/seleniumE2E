@@ -70,3 +70,5 @@ Data Gen		테스트 실행 시마다 랜덤 데이터(이메일, 이름 등) 자
 Role: QA Automation Engineer
 
 Focus: Test Automation, CI/CD Integration, Quality Assurance
+
+test program = 팀플제작 ERP https://github.com/DevFlow-ERP
