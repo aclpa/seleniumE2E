@@ -1,12 +1,34 @@
-## 🚀 ERP E2E Automation Suite 
-복잡한 Shadow DOM 구조와 동적 인터랙션을 100% 자동화한 Selenium 테스트 프레임워크
+## 🚀 ERP System E2E Automation Framework
+
+복잡한 웹 컴포넌트(Shadow DOM) 구조를 가진 ERP 시스템의 핵심 기능을 검증하기 위해 구축한 **Python + Selenium 기반의 테스트 자동화 프레임워크**입니다.
 
 ## 📌 Project Overview
 
-이 프로젝트는 웹 애플리케이션 ERP의 핵심 기능을 검증하기 위해 설계된 Python 기반 E2E(End-to-End) 자동화 테스트 솔루션입니다. 단순한 녹화/재생 방식이 아닌, Page Object Model(POM) 설계 패턴을 고려한 구조와 재귀적 탐색 알고리즘을 통해 유지보수성이 높고 견고한 테스트 코드를 구현했습니다.
+본 프로젝트는 유지보수성이 낮은 절차적 스크립트 방식의 한계를 극복하기 위해 **Page Object Model (POM)** 디자인 패턴을 적용했습니다. 이를 통해 화면 요소(Page)와 비즈니스 로직, 그리고 테스트 시나리오(Test)를 명확히 분리하여 코드 재사용성을 극대화했습니다.
 
-특히, 자동화가 까다로운 Shadow DOM 내부 요소 제어와 Drag & Drop 인터랙션을 완벽하게 구현하여 수동 테스트 시간을 획기적으로 단축하는 것을 목표로 했습니다.
+특히, 일반적인 Selenium 메서드로는 접근이 어려운 **Shadow DOM** 내부 요소 제어를 위해 재귀 탐색 로직을 유틸리티화하였으며, **Pytest** 프레임워크를 도입하여 테스트 수명 주기(Setup/Teardown)를 체계적으로 관리합니다.
 
+
+## 🏗️ Project Structure
+
+유지보수를 위해 소스 코드와 테스트 코드를 명확히 분리한 디렉토리 구조입니다.
+
+```bash
+seleniumE2E-6/
+├── src/
+│   ├── config/             # URL, Timeout 등 전역 설정 관리
+│   └── pages/              # Page Object Model (화면별 요소 및 동작 정의)
+│       ├── base_page.py    # 공통 메서드 (Shadow DOM 탐색, Wait 로직 등)
+│       ├── login_page.py   # 로그인/회원가입 페이지 로직
+│       ├── dashboard_page.py # 대시보드 및 칸반보드 로직
+│       └── profile_page.py # 프로필 수정 로직
+├── tests/                  # 실제 테스트 시나리오 (Pytest 기반)
+│   ├── test_auth.py        # 로그인, 회원가입, 중복 가입 방지 TC
+│   └── test_user_flow.py   # 프로필 수정, 로그아웃 등 사용자 시나리오 TC
+├── conftest.py             # Pytest Fixture (브라우저 실행/종료, Faker 설정)
+├── requirements.txt        # 의존성 패키지 목록
+└── README.md
+```
 ## 🎥 Demo Preview
 
 ### **TC 이미지를 클릭하면 시연 영상을 볼 수 있습니다.**
@@ -15,54 +37,40 @@
 
 ## 💡 Key Features & Challenges Solved
 
-- 이 프로젝트에서 해결한 주요 기술적 챌린지와 핵심 기능입니다.
+### 이 프로젝트에서 중점적으로 다룬 기술적 챌린지와 해결 전략입니다.
 
-**1. Advanced Shadow DOM Handling (Shadow DOM 제어)**
+- Advanced Shadow DOM Handling
+Challenge: Authentik SSO 로그인 페이지 등 최신 웹 컴포넌트가 Shadow Root로 캡슐화되어 있어, 기본 find_element로는 접근이 불가능함.
 
-- 문제: Authentik SSO 로그인 페이지와 같은 최신 웹 컴포넌트들이 Shadow Root로 캡슐화되어 있어 일반적인 Selenium find_element로는 접근이 불가능했습니다.
+Solution: base_page.py 내에 재귀 함수(get_shadow_element)를 구현. 중첩된 Shadow DOM(Nested Shadow Roots) 구조를 순차적으로 진입하여 요소를 찾아내도록 추상화.
 
-- 해결: 재귀 함수(get_shadow_element_v4)를 직접 구현하여, 중첩된 Shadow DOM(Nested Shadow Roots)을 뚫고 들어가 요소를 찾아내도록 로직을 설계했습니다.
+- Page Object Model (POM) Implementation
+Challenge: UI 변경 시 테스트 코드 전체를 수정해야 하는 유지보수 비용 발생.
 
-**2. Complex User Interactions (Drag & Drop)**
+Solution: 페이지의 Locator와 행위(Method)를 src/pages 클래스로 분리. UI 변경 시 해당 Page Class만 수정하면 되도록 개선.
 
-- 기능: 칸반 보드(Kanban Board)에서 이슈 카드를 이동시키는 시나리오 구현.
+ - Synchronization & Stability (동기화 전략)
+Challenge: 네트워크 지연이나 렌더링 속도 차이로 인한 Flaky Test(간헐적 실패) 발생.
 
-- 기술: Selenium의 ActionChains 클래스를 활용하여 마우스 클릭(Hold) → 이동(Move) → 놓기(Release) 동작을 정교하게 제어했습니다.
+Solution: time.sleep() 사용을 지양하고, WebDriverWait와 ExpectedConditions를 활용한 명시적 대기(Explicit Wait)를 적용하여 안정성 확보.
 
-**3. Dynamic Data Generation (동적 데이터 생성)**
+- Dynamic Data Generation
+Challenge: 반복 실행 시 데이터 중복(Duplicate Entry) 에러 발생.
 
-- 기능: 테스트를 반복 실행할 때마다 "이미 존재하는 이메일입니다" 에러를 방지하기 위해 Faker 라이브러리를 도입했습니다.
+Solution: Faker 라이브러리를 활용하여 매 테스트마다 고유한 이메일, 이름, 전화번호를 동적으로 생성하여 테스트 멱등성 보장.
 
-- 효과: 매번 새로운 사용자 이름, 이메일, 프로젝트 키를 생성하여 독립적인 테스트 환경을 보장합니다.
+- Complex Interactions (Drag & Drop)
+Challenge: 칸반 보드 내 이슈 카드 이동과 같은 복잡한 사용자 인터랙션 검증 필요.
 
-**4. Robust Sync Strategy (동기화 전략)**
-
-- 기술: time.sleep을 최소화하고 WebDriverWait와 ExpectedConditions(EC)를 적극 사용하여, 네트워크 속도나 렌더링 지연에 상관없이 테스트가 안정적으로 수행되도록 구현했습니다.
-
-**5. Test Isolation & State Management (테스트 격리 및 상태 관리)**
-
-- 문제: E2E 테스트 특성상 이전 테스트의 로그인 세션이나 데이터가 남아있으면 다음 테스트가 실패(Flaky Test)할 가능성이 높았습니다.
-
-- 해결: 각 테스트 케이스(tc_xx) 실행 종료 시 Teardown 루틴(Cookie 및 LocalStorage 초기화)을 강제하여 테스트 환경을 항상 'Clean State'로 리셋하도록 설계했습니다.
-
-- 효과: 테스트 간의 상호 의존성(Dependency)을 제거하여, 특정    테스트가 실패하더라도 나머지 테스트는 정상 수행됩니다.
-
-- 필요에 따라 tc_01, tc_09 등 특정 케이스만 개별적으로 실행해도 문제없이 동작하도록 독립성을 확보했습니다.
+Solution: Selenium ActionChains 클래스를 활용하여 ClickAndHold → Move → Release 동작을 정교하게 제어.
 
 ## 🛠 Tech Stack & Tools
 
-- Category	Technology	Usage
-Language		전체 테스트 스크립트 로직 구현
-- Automation		브라우저 제어 및 사용자 동작 시뮬레이션
-Data Gen		테스트 실행 시마다 랜덤 데이터(이메일, 이름 등) 자동 생성
-- Driver		webdriver-manager를 통한 드라이버 버전 자동 관리
-
-## 💻 사용 라이브러리
-
-
-- webdriver-manager 
-- faker
-
+- Language	Python 3.11+	전체 자동화 로직 구현
+- Framework	Pytest	테스트 실행, Fixture 및 Assertions 관리
+- Automation	Selenium WebDriver	브라우저 제어 및 사용자 인터랙션 시뮬레이션
+- Driver Mgmt	Webdriver-manager	브라우저 드라이버 버전 자동 관리
+- Data Gen	Faker	테스트용 더미 데이터 생성
 
 ## 📧 Contact
 
