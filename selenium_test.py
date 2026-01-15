@@ -11,6 +11,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from faker import Faker
+from selenium.webdriver.common.action_chains import ActionChains
 
 class DevFlowTestRunner:
     def __init__(self):
@@ -582,6 +583,30 @@ class DevFlowTestRunner:
         self.driver.delete_all_cookies()
         self.driver.execute_script("window.localStorage.clear();")
 
+    def tc_11_kanbanboard(self):
+        print("\n[TC-11] 칸반보드 테스트")
+        self.driver.get(self.base_url)
+        time.sleep(1)
+        self._shadow_fill('login_main_email', self.existing_email)
+        self._shadow_fill('login_main_password', self.existing_password)
+        self._shadow_click('login_main_submit')
+        print("대시보드 도달 확인")
+        time.sleep(1)
+        print("사이드바에서 Kanban Board 메뉴 클릭")
+        self._shadow_click("//div[@role='listitem' and contains(., 'Kanban Board')]")
+        time.sleep(1)
+        source = self.driver.find_element(By.XPATH, "//div[contains(text(), 'test')]")
+        target = self.driver.find_element(By.XPATH, "//div[contains(text(), 'In Progress')]/ancestor::div[contains(@class, 'column')]")
+        actions = ActionChains(self.driver)
+        actions.drag_and_drop(source, target).perform()
+        time.sleep(1)
+        assert "test" in self.driver.find_element(By.XPATH, "//div[contains(@class, 'q-card') and contains(., 'In Progress')]").text
+        print("✅ 검증 완료 : 이슈가 'In Progress' 칼럼으로 이동됨")
+        self.driver.delete_all_cookies()
+        self.driver.execute_script("window.localStorage.clear();")
+
+
+
 
 
 # =================================================================
@@ -599,6 +624,8 @@ if __name__ == "__main__":
         "tc_08_projectfeild",
         "tc_09_sprint",
         "tc_10_issue",
+        "tc_11_kanbanboard",
+
 
     ]
 
