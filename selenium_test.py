@@ -605,8 +605,31 @@ class DevFlowTestRunner:
         self.driver.delete_all_cookies()
         self.driver.execute_script("window.localStorage.clear();")
 
+    def tc_12_logout(self):
+        print("\n[TC-12] 로그아웃 테스트")
+        self.driver.get(self.base_url)
+        time.sleep(1)
+        self._shadow_fill('login_main_email', self.existing_email)
+        self._shadow_fill('login_main_password', self.existing_password)
+        self._shadow_click('login_main_submit')
+        print("대시보드 도달 확인")
+        time.sleep(5)
+        print("상단 계정 아이콘 클릭")
+        avatar_selector = ".q-avatar" 
+        avatar_btn = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, avatar_selector)))
+        avatar_btn.click()
+        time.sleep(1) # 메뉴가 펼쳐질 때까지 잠시 대기
 
+        print("메뉴에서 Logout 클릭")
+        menu_text = "Logout"
+        logout_menu = self.driver.find_element(By.XPATH, f"//div[contains(text(), '{menu_text}')]")
+        logout_menu.click()
+        time.sleep(1) # 페이지 이동 대기
 
+        print("로그아웃 후 로그인 페이지 도달 확인")
+        time.sleep(1)
+        if "login" in self.driver.current_url:
+            print("✅ Pass: 로그아웃 성공")
 
 
 # =================================================================
@@ -625,6 +648,8 @@ if __name__ == "__main__":
         "tc_09_sprint",
         "tc_10_issue",
         "tc_11_kanbanboard",
+        "tc_12_logout",
+
 
 
     ]
