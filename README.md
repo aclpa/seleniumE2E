@@ -22,20 +22,32 @@
 유지보수를 위해 소스 코드와 테스트 코드를 명확히 분리한 디렉토리 구조입니다.
 
 ```bash
-seleniumE2E-6/
+seleniumE2E-12/
 ├── src/
-│   ├── config/             # URL, Timeout 등 전역 설정 관리
+│   ├── config/             # (코드 내 import로 확인됨, 전역 설정)
 │   └── pages/              # Page Object Model (화면별 요소 및 동작 정의)
 │       ├── base_page.py    # 공통 메서드 (Shadow DOM 탐색, Wait 로직 등)
-│       ├── login_page.py   # 로그인/회원가입 페이지 로직
-│       ├── dashboard_page.py # 대시보드 및 칸반보드 로직
-│       └── profile_page.py # 프로필 수정 로직
+│       ├── dashboard_page.py # 대시보드 및 상단/사이드 메뉴 로직
+│       ├── issue_page.py   # 이슈 관리 페이지 로직
+│       ├── kanban_page.py  # 칸반 보드 페이지 로직
+│       ├── login_page.py   # 로그인, 회원가입, 에러 메시지 처리
+│       ├── profile_page.py # 프로필 정보 수정 로직
+│       ├── project_page.py # 프로젝트 생성 및 관리 로직
+│       ├── sprint_page.py  # 스프린트 관리 로직
+│       └── team_page.py    # 팀 관리 페이지 로직
 ├── tests/                  # 실제 테스트 시나리오 (Pytest 기반)
-│   ├── test_auth.py        # 로그인, 회원가입, 중복 가입 방지 TC
-│   └── test_user_flow.py   # 프로필 수정, 로그아웃 등 사용자 시나리오 TC
+│   ├── test_auth.py        # 로그인, 회원가입, 예외 케이스 TC
+│   ├── test_project.py     # 프로젝트 관련 TC
+│   └── test_user_flow.py   # 프로필 수정, 로그아웃 등 사용자 흐름 TC
+├── legucy/                 # (Legacy) 기존 Selenium 테스트 스크립트
+│   └── selenium_test.py
+├── media/                  # 테스트 결과 스크린샷 및 이미지 리소스
+├── node_modules/           # Node.js 라이브러리 (JavaScript 의존성)
 ├── conftest.py             # Pytest Fixture (브라우저 실행/종료, Faker 설정)
-├── requirements.txt        # 의존성 패키지 목록
-└── README.md
+├── package.json            # Node.js 프로젝트 설정
+├── package-lock.json       # Node.js 의존성 잠금 파일
+├── .gitignore              # Git 제외 파일 설정
+└── README.md               # 프로젝트 문서
 ```
 
 ## 💡 Key Features & Challenges Solved
