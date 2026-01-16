@@ -59,8 +59,7 @@ Challenge: Authentik SSO 로그인 페이지 등 최신 웹 컴포넌트가 Shad
 
 Solution: base_page.py 내에 재귀 함수(get_shadow_element)를 구현. 중첩된 Shadow DOM(Nested Shadow Roots) 구조를 순차적으로 진입하여 요소를 찾아내도록 추상화.
 
-- Page Object Model (POM) Implementation
-Challenge: UI 변경 시 테스트 코드 전체를 수정해야 하는 유지보수 비용 발생.
+- 해결: 재귀 함수(get_shadow_element_v4)를 구현하여, 중첩된 Shadow DOM(Nested Shadow Roots)을 뚫고 들어가 요소를 찾아내도록 로직을 설계했습니다.
 
 Solution: 페이지의 Locator와 행위(Method)를 src/pages 클래스로 분리. UI 변경 시 해당 Page Class만 수정하면 되도록 개선.
 
@@ -77,7 +76,16 @@ Solution: Faker 라이브러리를 활용하여 매 테스트마다 고유한 �
 - Complex Interactions (Drag & Drop)
 Challenge: 칸반 보드 내 이슈 카드 이동과 같은 복잡한 사용자 인터랙션 검증 필요.
 
-Solution: Selenium ActionChains 클래스를 활용하여 ClickAndHold → Move → Release 동작을 정교하게 제어.
+
+**4. Test Isolation & State Management (테스트 격리 및 상태 관리)**
+
+- 문제: E2E 테스트 특성상 이전 테스트의 로그인 세션이나 데이터가 남아있으면 다음 테스트가 실패(Flaky Test)할 가능성이 높았습니다.
+
+- 해결: 각 테스트 케이스(tc_xx) 실행 종료 시 Teardown 루틴(Cookie 및 LocalStorage 초기화)을 강제하여 테스트 환경을 항상 'Clean State'로 리셋하도록 설계했습니다.
+
+- 효과: 테스트 간의 상호 의존성(Dependency)을 제거하여, 특정    테스트가 실패하더라도 나머지 테스트는 정상 수행됩니다.
+
+- 필요에 따라 tc_01, tc_09 등 특정 케이스만 개별적으로 실행해도 문제없이 동작하도록 독립성을 확보했습니다.
 
 ## 🛠 Tech Stack & Tools
 
@@ -92,3 +100,5 @@ Solution: Selenium ActionChains 클래스를 활용하여 ClickAndHold → Move 
 Role: QA Automation Engineer
 
 Focus: Test Automation, CI/CD Integration, Quality Assurance
+
+test program = 팀플제작 ERP https://github.com/DevFlow-ERP
