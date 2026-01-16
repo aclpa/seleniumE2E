@@ -8,7 +8,7 @@ from faker import Faker
 
 @pytest.fixture(scope="session")
 def fake():
-    return Faker("ko_KR")
+    return Faker()
 
 @pytest.fixture(scope="function")
 def driver():

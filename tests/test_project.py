@@ -4,7 +4,7 @@ from src.pages.dashboard_page import DashboardPage
 from src.pages.project_page import ProjectPage
 from src.config.config import Config
 
-def test_create_team_success(driver, fake): # tc_06
+def test_create_team(driver, fake): # tc_06
     print("\n[TC-06] 팀 생성 테스트")
     
     # 1. 로그인
@@ -13,18 +13,42 @@ def test_create_team_success(driver, fake): # tc_06
     
     # 2. 'Teams' 메뉴로 이동 (DashboardPage 담당)
     dashboard = DashboardPage(driver)
-    dashboard.go_to_teams() # 지난번에 만들어둔 함수 호출!
+    dashboard.go_to_teams()
     
 
     # 3. 팀 생성 수행 (ProjectPage 담당)
-    project_page = ProjectPage(driver)
+    team_page = ProjectPage(driver)
 
     # Faker로 랜덤 팀 이름 생성 (중복 방지)
-    random_team_name = f"{fake.color_name()} Team"
-    project_page.create_team(random_team_name)
+    random_team_name = fake.pystr(min_chars=4, max_chars=6)
+    team_page.create_team(random_team_name)
     
     
     # 4. 검증
-    assert project_page.is_text_visible(random_team_name)
-
+    assert team_page.is_text_visible(random_team_name)
     print(f"✅ 팀 생성 확인 완료: {random_team_name}")
+
+def test_create_project(driver, fake): #tc_07
+    print("\n[TC-07] 프로젝트 생성 테스트")
+    
+    # 1. 로그인
+    login_page = LoginPage(driver)
+    login_page.main_login(Config.TEST_EMAIL, Config.TEST_PASSWORD)
+
+    # 2. 'Projects' 메뉴로 이동 (DashboardPage 담당)
+    dashboard = DashboardPage(driver)
+    dashboard.go_to_projects() 
+    
+    # 3. 프로젝트 생성 수행 (ProjectPage 담당)
+    project_page = ProjectPage(driver)
+
+    # Faker로 랜덤 프로젝트 이름/키 생성 (중복 방지)
+    random_project_name = fake.pystr(min_chars=4, max_chars=6)
+    random_project_key = random_project_name.upper()
+    project_page.create_project(random_project_name, random_project_key)
+    
+    
+    # 4. 검증
+    assert project_page.is_text_visible(random_project_name)
+
+    print(f"✅ 프로젝트 생성 확인 완료: {random_project_name} ({random_project_key})")

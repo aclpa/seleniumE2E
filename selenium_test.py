@@ -419,46 +419,46 @@
     #     self.driver.delete_all_cookies()
     #     self.driver.execute_script("window.localStorage.clear();")
 
-    def tc_07_projectfeild(self):
-        print("tc_07 프로젝트 필드 입력 테스트")
-        self.driver.get(self.base_url)
-        time.sleep(0.5)
-        self._shadow_fill('login_main_email', self.existing_email)
-        self._shadow_fill('login_main_password', self.existing_password)
-        self._shadow_click('login_main_submit')
-        print("대시보드 도달 확인")
-        time.sleep(0.5)
-        print("사이드바에서 'Projects' 메뉴 클릭")
-        self._shadow_click("menu_projects")
-        time.sleep(0.5)
-        print("'New Project' 버튼 클릭")
-        new_project_span = self.driver.find_element(By.XPATH, "//span[contains(text(), 'New Project')]")
-        new_project_span.click()
-        time.sleep(0.5)
-        project_name = f"{self.fake.color_name()} 개발 프로젝트"
-        print("프로젝트 이름 입력")
-        project_name_input = self.driver.find_element(By.XPATH, "//input[@aria-label='프로젝트 이름 *']")
-        project_name_input.send_keys(project_name)
-        print("프로젝트 키 입력")
-        upper_project_key = self.fake.color_name().upper()
-        project_key_input = self.driver.find_element(By.XPATH, "//input[@aria-label='프로젝트 키 *']")# 프로젝트 키 입력창 찾기
-        project_key_input.send_keys(upper_project_key)
-        print("프로젝트 팀 선택")# 클릭해서 드롭다운 열기
-        project_team_select = "//div[contains(@class, 'q-field__control') and .//div[contains(., 'Team *')]]"# XPath 수정
-        self._click(project_team_select)# 클릭해서 드롭다운 열기
-        time.sleep(0.5)# 대기
-        option_xpath = "//div[@role='option']//span[contains(text(), 'test')]"
-        self._click(option_xpath)
-        time.sleep(0.5)
-        print("프로젝트 생성 버튼 클릭")
-        self._click("//span[contains(text(), 'Create')]")
-        time.sleep(0.5)
-        if project_name in self.driver.page_source:
-            print(f"✅ Pass: {project_name}")
-        else:
-            print(f"❌ Fail: {project_name} 없음")
-        self.driver.delete_all_cookies()
-        self.driver.execute_script("window.localStorage.clear();")
+    # def tc_07_projectfeild(self):
+    #     print("tc_07 프로젝트 필드 입력 테스트")
+    #     self.driver.get(self.base_url)
+    #     time.sleep(0.5)
+    #     self._shadow_fill('login_main_email', self.existing_email)
+    #     self._shadow_fill('login_main_password', self.existing_password)
+    #     self._shadow_click('login_main_submit')
+    #     print("대시보드 도달 확인")
+    #     time.sleep(0.5)
+    #     print("사이드바에서 'Projects' 메뉴 클릭")
+    #     self._shadow_click("menu_projects")
+    #     time.sleep(0.5)
+    #     print("'New Project' 버튼 클릭")
+    #     new_project_span = self.driver.find_element(By.XPATH, "//span[contains(text(), 'New Project')]")
+    #     new_project_span.click()
+    #     time.sleep(0.5)
+    #     project_name = f"{self.fake.color_name()} 개발 프로젝트"
+    #     print("프로젝트 이름 입력")
+    #     project_name_input = self.driver.find_element(By.XPATH, "//input[@aria-label='프로젝트 이름 *']")
+    #     project_name_input.send_keys(project_name)
+    #     print("프로젝트 키 입력")
+    #     upper_project_key = self.fake.color_name().upper()
+    #     project_key_input = self.driver.find_element(By.XPATH, "//input[@aria-label='프로젝트 키 *']")# 프로젝트 키 입력창 찾기
+    #     project_key_input.send_keys(upper_project_key)
+    #     print("프로젝트 팀 선택")# 클릭해서 드롭다운 열기
+    #     project_team_select = "//div[contains(@class, 'q-field__control') and .//div[contains(., 'Team *')]]"# XPath 수정
+    #     self._click(project_team_select)# 클릭해서 드롭다운 열기
+    #     time.sleep(0.5)# 대기
+    #     option_xpath = "//div[@role='option']//span[contains(text(), 'test')]"
+    #     self._click(option_xpath)
+    #     time.sleep(0.5)
+    #     print("프로젝트 생성 버튼 클릭")
+    #     self._click("//span[contains(text(), 'Create')]")
+    #     time.sleep(0.5)
+    #     if project_name in self.driver.page_source:
+    #         print(f"✅ Pass: {project_name}")
+    #     else:
+    #         print(f"❌ Fail: {project_name} 없음")
+    #     self.driver.delete_all_cookies()
+    #     self.driver.execute_script("window.localStorage.clear();")
 
 
     def tc_08_sprint(self):

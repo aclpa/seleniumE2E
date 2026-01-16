@@ -3,7 +3,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-
+from selenium.common.exceptions import StaleElementReferenceException
 class BasePage:
     def __init__(self, driver):
         self.driver = driver
@@ -22,22 +22,33 @@ class BasePage:
 
     def click(self, locator):
         """
-        locator 타입에 따라 자동으로 처리하는 클릭 함수
-        - 튜플: (By.XPATH, "//...") -> 일반 Selenium 방식 (추천)
-        - 리스트: ["root", "child"] -> Shadow DOM 방식
-        - 문자열: "//button" -> 구버전 호환 (자동 감지)
+        [Pure Selenium] StaleElement 발생 시, Wait을 통해 스마트하게 재시도
         """
-        if isinstance(locator, tuple):  # 1. 튜플이면 (By.XX, "selector")
-            element = self.wait.until(EC.element_to_be_clickable(locator))
-        
-        elif isinstance(locator, list): # 2. 리스트면 Shadow DOM
-            element = self.get_shadow_element(locator)
-        
-        else: # 3. 문자열이면 자동 감지 (기존 코드 호환)
-            by = By.XPATH if "//" in locator else By.CSS_SELECTOR
-            element = self.wait.until(EC.element_to_be_clickable((by, locator)))
-        
-        element.click()
+        attempts = 0
+        while attempts < 3:
+            try:
+                # 1. 요소가 클릭 가능할 때까지 기다림 (여기서 자동으로 대기함)
+                if isinstance(locator, tuple):
+                    element = self.wait.until(EC.element_to_be_clickable(locator))
+                elif isinstance(locator, list):
+                    element = self.get_shadow_element(locator)
+                else:
+                    by = By.XPATH if "//" in locator else By.CSS_SELECTOR
+                    element = self.wait.until(EC.element_to_be_clickable((by, locator)))
+                
+                # 2. 클릭 시도
+                element.click()
+                return # 성공하면 함수 종료!
+
+            except StaleElementReferenceException:
+                # 3. 죽은 요소(Stale)라면?
+                # time.sleep 없이 그냥 카운트만 올리고 다시 루프를 돕니다.
+                # 다음 루프 시작 부분의 wait.until이 "새로운 요소"가 뜰 때까지 알아서 기다려줍니다.
+                attempts += 1
+                print(f"⚠️ 요소 변경 감지(Stale). 재시도 {attempts}/3")
+                
+        # 3번 다 실패하면 에러 발생
+        raise Exception(f"요소를 클릭할 수 없습니다 (Stale): {locator}")
 
 
     def send_keys(self, locator, text): # 자동으로 처리하는 입력 함수
@@ -51,7 +62,6 @@ class BasePage:
         
         element.clear()# 기존 내용 지우기
         element.send_keys(text)# 입력
-        element.send_keys(Keys.TAB)# 포커스 아웃
         self.wait.until(lambda d: element.get_attribute('value') == text)
 
 
