@@ -39,7 +39,7 @@ seleniumE2E-12/
 │   ├── test_auth.py        # 로그인, 회원가입, 예외 케이스 TC
 │   ├── test_project.py     # 프로젝트 관련 TC
 │   └── test_user_flow.py   # 프로필 수정, 로그아웃 등 사용자 흐름 TC
-├── legucy/                 # (Legacy) 기존 Selenium 테스트 스크립트
+├── legacy/                 # (Legacy) 기존 Selenium 테스트 스크립트
 │   └── selenium_test.py
 ├── media/                  # 테스트 결과 스크린샷 및 이미지 리소스
 ├── node_modules/           # Node.js 라이브러리 (JavaScript 의존성)
