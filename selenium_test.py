@@ -461,54 +461,54 @@
     #     self.driver.execute_script("window.localStorage.clear();")
 
 
-    def tc_08_sprint(self):
-        print("\n[TC-08] 스프린트 생성 테스트")
-        self.driver.get(self.base_url)
-        time.sleep(0.5)
-        self._shadow_fill('login_main_email', self.existing_email)
-        self._shadow_fill('login_main_password', self.existing_password)
-        self._shadow_click('login_main_submit')
-        print("대시보드 도달 확인")
-        time.sleep(0.5)   
-        print("사이드바에서 Sprints 메뉴 클릭")
-        self._shadow_click("//div[@role='listitem' and contains(., 'Sprints')]")
-        time.sleep(0.5)
-        print("'New Sprint' 버튼 클릭")
-        new_sprint_span = self.driver.find_element(By.XPATH, "//span[contains(text(), 'New Sprint')]")
-        new_sprint_span.click()
-        time.sleep(0.5)
-        print("프로젝트 선택")
-        project_select = "//div[contains(@class, 'q-field__control') and .//div[contains(., 'Project *')]]"
-        self._click(project_select)
-        time.sleep(0.5)
-        option_xpath = "//div[@role='option']//span[contains(text(), 'test')]"
-        self._click(option_xpath)
-        time.sleep(0.5)
-        print("스프린트 이름 입력")
-        sprint_name = f"{self.fake.color_name()} 스프린트"
-        sprint_name_input = self.driver.find_element(By.XPATH, "//input[@aria-label='Sprint Name *']")
-        sprint_name_input.send_keys(sprint_name)
-        time.sleep(0.5)
-        print("status 선택")
-        status_xpath = self._click("//i[contains(text(), 'event_note')]")
-        self._click(status_xpath)
-        time.sleep(0.5)
-        active_ele = self.driver.switch_to.active_element
-        active_ele.send_keys(Keys.ARROW_UP)
-        time.sleep(0.5)
-        active_ele.send_keys(Keys.ENTER)
-        time.sleep(0.5)
+    # def tc_08_sprint(self):
+    #     print("\n[TC-08] 스프린트 생성 테스트")
+    #     self.driver.get(self.base_url)
+    #     time.sleep(0.5)
+    #     self._shadow_fill('login_main_email', self.existing_email)
+    #     self._shadow_fill('login_main_password', self.existing_password)
+    #     self._shadow_click('login_main_submit')
+    #     print("대시보드 도달 확인")
+    #     time.sleep(0.5)   
+    #     print("사이드바에서 Sprints 메뉴 클릭")
+    #     self._shadow_click("//div[@role='listitem' and contains(., 'Sprints')]")
+    #     time.sleep(0.5)
+    #     print("'New Sprint' 버튼 클릭")
+    #     new_sprint_span = self.driver.find_element(By.XPATH, "//span[contains(text(), 'New Sprint')]")
+    #     new_sprint_span.click()
+    #     time.sleep(0.5)
+    #     print("프로젝트 선택")
+    #     project_select = "//div[contains(@class, 'q-field__control') and .//div[contains(., 'Project *')]]"
+    #     self._click(project_select)
+    #     time.sleep(0.5)
+    #     option_xpath = "//div[@role='option']//span[contains(text(), 'test')]"
+    #     self._click(option_xpath)
+    #     time.sleep(0.5)
+    #     print("스프린트 이름 입력")
+    #     sprint_name = f"{self.fake.color_name()} 스프린트"
+    #     sprint_name_input = self.driver.find_element(By.XPATH, "//input[@aria-label='Sprint Name *']")
+    #     sprint_name_input.send_keys(sprint_name)
+    #     time.sleep(0.5)
+    #     print("status 선택")
+    #     status_xpath = self._click("//i[contains(text(), 'event_note')]")
+    #     self._click(status_xpath)
+    #     time.sleep(0.5)
+    #     active_ele = self.driver.switch_to.active_element
+    #     active_ele.send_keys(Keys.ARROW_UP)
+    #     time.sleep(0.5)
+    #     active_ele.send_keys(Keys.ENTER)
+    #     time.sleep(0.5)
 
-        print("스프린트 생성 버튼 클릭")
-        self._click("//span[contains(text(), 'Create')]")
-        time.sleep(0.5)
-        if sprint_name in self.driver.page_source:
-            print(f"✅ Pass: {sprint_name}")
-        else:
-            print(f"❌ Fail: {sprint_name} 없음")
+    #     print("스프린트 생성 버튼 클릭")
+    #     self._click("//span[contains(text(), 'Create')]")
+    #     time.sleep(0.5)
+    #     if sprint_name in self.driver.page_source:
+    #         print(f"✅ Pass: {sprint_name}")
+    #     else:
+    #         print(f"❌ Fail: {sprint_name} 없음")
 
-        self.driver.delete_all_cookies()
-        self.driver.execute_script("window.localStorage.clear();")
+    #     self.driver.delete_all_cookies()
+    #     self.driver.execute_script("window.localStorage.clear();")
 
     def tc_09_issue(self):
         print("\n[TC-09] 이슈 생성 테스트")

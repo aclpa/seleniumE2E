@@ -52,3 +52,28 @@ def test_create_project(driver, fake): #tc_07
     assert project_page.is_text_visible(random_project_name)
 
     print(f"✅ 프로젝트 생성 확인 완료: {random_project_name} ({random_project_key})")
+
+
+def test_create_sprint(driver, fake): # tc_08
+    print("\n[TC-08] 스프린트 생성 테스트")
+    
+    # 1. 로그인
+    login_page = LoginPage(driver)
+    login_page.main_login(Config.TEST_EMAIL, Config.TEST_PASSWORD)
+
+    # 2. 'Projects' 메뉴로 이동 (DashboardPage 담당)
+    dashboard = DashboardPage(driver)
+    dashboard.go_to_sprints() 
+    
+    # 3. 스프린트 생성 수행 (ProjectPage 담당)
+    project_page = ProjectPage(driver)
+
+    # Faker로 랜덤 스프린트 이름 생성 (중복 방지)
+    random_sprint_name = fake.pystr(min_chars=4, max_chars=6)
+    project_page.create_sprint(random_sprint_name)
+    
+    
+    # 4. 검증
+    assert project_page.is_text_visible(random_sprint_name)
+
+    print(f"✅ 스프린트 생성 확인 완료: {random_sprint_name}")
