@@ -9,6 +9,12 @@
 특히, 일반적인 Selenium 메서드로는 접근이 어려운 **Shadow DOM** 내부 요소 제어를 위해 재귀 탐색 로직을 유틸리티화하였으며, **Pytest** 프레임워크를 도입하여 테스트 수명 주기(Setup/Teardown)를 체계적으로 관리합니다.
 
 
+## 🎥 Demo Preview
+### TC_05 프로필 수정 테스트
+![alt text](<media/녹음 2026-01-16 203204.gif>)
+### TC
+![TC](/media/seleniumtc.png)
+
 ## 🏗️ Project Structure
 
 유지보수를 위해 소스 코드와 테스트 코드를 명확히 분리한 디렉토리 구조입니다.
@@ -29,11 +35,6 @@ seleniumE2E-6/
 ├── requirements.txt        # 의존성 패키지 목록
 └── README.md
 ```
-## 🎥 Demo Preview
-
-### **TC 이미지를 클릭하면 시연 영상을 볼 수 있습니다.**
-[![테스트 결과 화면](/media/seleniumtc.png)](https://youtu.be/uwcIr0_jezI?si=90FvkfzObSI7YHkc)
-
 
 ## 💡 Key Features & Challenges Solved
 
