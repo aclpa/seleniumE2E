@@ -4,6 +4,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import StaleElementReferenceException
+from selenium.webdriver import ActionChains
+
+
 class BasePage:
     def __init__(self, driver):
         self.driver = driver
@@ -38,12 +41,10 @@ class BasePage:
                 
                 # 2. 클릭 시도
                 element.click()
-                return # 성공하면 함수 종료!
+                return # 성공하면 함수 종료
 
             except StaleElementReferenceException:
-                # 3. 죽은 요소(Stale)라면?
-                # time.sleep 없이 그냥 카운트만 올리고 다시 루프를 돕니다.
-                # 다음 루프 시작 부분의 wait.until이 "새로운 요소"가 뜰 때까지 알아서 기다려줍니다.
+
                 attempts += 1
                 print(f"⚠️ 요소 변경 감지(Stale). 재시도 {attempts}/3")
                 
@@ -110,9 +111,89 @@ class BasePage:
         if isinstance(locator, tuple):
             element = self.wait.until(EC.presence_of_element_located(locator))
         else:
-            # 기존 로직 (Shadow DOM 등) 유지하거나, tuple만 처리해도 됨
-            # 여기서는 편의상 tuple 기준으로 작성
+
             element = self.wait.until(EC.presence_of_element_located((By.XPATH, locator) if "//" in locator else (By.CSS_SELECTOR, locator)))
 
         # 2. 자바스크립트로 클릭 실행 (겹친 요소 무시)
         self.driver.execute_script("arguments[0].click();", element)
+
+    def drag_and_drop(self, source_locator, target_locator):
+        """
+        source 요소를 잡아서 target 요소 위로 드래그 앤 드롭합니다.
+        """
+        # 1. 요소 찾기
+        if isinstance(source_locator, tuple):
+            source = self.wait.until(EC.visibility_of_element_located(source_locator))
+        else:
+            source = source_locator
+
+        if isinstance(target_locator, tuple):
+            target = self.wait.until(EC.visibility_of_element_located(target_locator))
+        else:
+            target = target_locator
+
+        # 2. 액션 수행 (잡고 -> 이동 -> 놓기)
+        actions = ActionChains(self.driver)
+        
+
+        actions.click_and_hold(source)\
+               .pause(0.5)\
+               .move_to_element(target)\
+               .pause(0.5)\
+               .release()\
+               .perform()
+        
+
+
+    def drag_and_drop_js(self, source_locator, target_locator):
+        """
+        [JS 우회] ActionChains로 해결되지 않는 HTML5 드래그 앤 드롭을 처리합니다.
+        Vue/React의 DOM Re-render로 인한 Stale 에러를 100% 방지합니다.
+        """
+        # 1. 요소 찾기
+        if isinstance(source_locator, tuple):
+            source = self.wait.until(EC.presence_of_element_located(source_locator))
+        else:
+            source = source_locator
+
+        if isinstance(target_locator, tuple):
+            target = self.wait.until(EC.presence_of_element_located(target_locator))
+        else:
+            target = target_locator
+
+
+        js_script = """
+            var src = arguments[0];
+            var tgt = arguments[1];
+            
+            var dataTransfer = {
+                dropEffect: '',
+                effectAllowed: 'all',
+                files: [],
+                items: {},
+                types: [],
+                setData: function (format, data) {
+                    this.items[format] = data;
+                    this.types.push(format);
+                },
+                getData: function (format) {
+                    return this.items[format];
+                },
+                clearData: function (format) { }
+            };
+
+            var emit = function (event, target) {
+                var evt = document.createEvent("Event");
+                evt.initEvent(event, true, false);
+                evt.dataTransfer = dataTransfer;
+                target.dispatchEvent(evt);
+            };
+
+            emit("dragstart", src);
+            emit("dragenter", tgt);
+            emit("dragover", tgt);
+            emit("drop", tgt);
+            emit("dragend", src);
+        """
+        self.driver.execute_script(js_script, source, target)
+        print("   ⚡ JS로 강제 드래그 앤 드롭 실행 완료")

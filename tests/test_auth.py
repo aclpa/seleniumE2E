@@ -10,7 +10,7 @@ def test_signup_success(driver,fake): #tc_01
     # 1. 페이지 객체
     login_page = LoginPage(driver)
     
-    # 2. 데이터 준비 (Faker 쓰면 더 좋음)
+    # 2. 데이터 준비
     random_email = fake.email()
     random_username = fake.name()
     random_password = fake.password(length=10)

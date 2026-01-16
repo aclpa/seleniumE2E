@@ -6,6 +6,7 @@ from src.config.config import Config
 from src.pages.team_page import TeamPage
 from src.pages.sprint_page import SprintPage   
 from src.pages.issue_page import issuePage
+from src.pages.kanban_page import KanbanPage
 
 def test_create_team(driver, fake): # tc_06
     print("\n[TC-06] 팀 생성 테스트")
@@ -103,3 +104,22 @@ def test_create_issue(driver, fake): # tc_09
     assert issue_page.is_text_visible(random_issue_title)
 
     print(f"✅ 이슈 생성 확인 완료: {random_issue_title}")
+
+def test_kanban(driver): # tc_10
+    print("\n[TC-10] 칸반 보드 테스트")
+    
+    # 1. 로그인
+    login_page = LoginPage(driver)
+    login_page.main_login(Config.TEST_EMAIL, Config.TEST_PASSWORD)
+
+    # 2. 'Projects' 메뉴로 이동 (DashboardPage 담당)
+    dashboard = DashboardPage(driver)
+    dashboard.go_to_kanban() 
+
+    kanban_page = KanbanPage(driver)
+    
+    # 드래그 앤 드롭 수행
+    kanban_page.move_card_to_done()
+    
+    # 검증: 카드가 진짜로 In Progress 컬럼 안에 있는지 확인
+    assert kanban_page.is_text_visible_in_column("test", "In Progress")

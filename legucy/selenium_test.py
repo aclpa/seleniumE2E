@@ -555,27 +555,27 @@
     #     self.driver.delete_all_cookies()
     #     self.driver.execute_script("window.localStorage.clear();")
 
-    def tc_10_kanbanboard(self):
-        print("\n[TC-10] 칸반보드 테스트")
-        self.driver.get(self.base_url)
-        time.sleep(0.5)
-        self._shadow_fill('login_main_email', self.existing_email)
-        self._shadow_fill('login_main_password', self.existing_password)
-        self._shadow_click('login_main_submit')
-        print("대시보드 도달 확인")
-        time.sleep(0.5)
-        print("사이드바에서 Kanban Board 메뉴 클릭")
-        self._shadow_click("//div[@role='listitem' and contains(., 'Kanban Board')]")
-        time.sleep(0.5)
-        source = self.driver.find_element(By.XPATH, "//div[contains(text(), 'test')]")
-        target = self.driver.find_element(By.XPATH, "//div[contains(text(), 'In Progress')]/ancestor::div[contains(@class, 'column')]")
-        actions = ActionChains(self.driver)
-        actions.drag_and_drop(source, target).perform()
-        time.sleep(0.5)
-        assert "test" in self.driver.find_element(By.XPATH, "//div[contains(@class, 'q-card') and contains(., 'In Progress')]").text
-        print("✅ 검증 완료 : 이슈가 'In Progress' 칼럼으로 이동됨")
-        self.driver.delete_all_cookies()
-        self.driver.execute_script("window.localStorage.clear();")
+    # def tc_10_kanbanboard(self):
+    #     print("\n[TC-10] 칸반보드 테스트")
+    #     self.driver.get(self.base_url)
+    #     time.sleep(0.5)
+    #     self._shadow_fill('login_main_email', self.existing_email)
+    #     self._shadow_fill('login_main_password', self.existing_password)
+    #     self._shadow_click('login_main_submit')
+    #     print("대시보드 도달 확인")
+    #     time.sleep(0.5)
+    #     print("사이드바에서 Kanban Board 메뉴 클릭")
+    #     self._shadow_click("//div[@role='listitem' and contains(., 'Kanban Board')]")
+    #     time.sleep(0.5)
+    #     source = self.driver.find_element(By.XPATH, "//div[contains(text(), 'test')]")
+    #     target = self.driver.find_element(By.XPATH, "//div[contains(text(), 'In Progress')]/ancestor::div[contains(@class, 'column')]")
+    #     actions = ActionChains(self.driver)
+    #     actions.drag_and_drop(source, target).perform()
+    #     time.sleep(0.5)
+    #     assert "test" in self.driver.find_element(By.XPATH, "//div[contains(@class, 'q-card') and contains(., 'In Progress')]").text
+    #     print("✅ 검증 완료 : 이슈가 'In Progress' 칼럼으로 이동됨")
+    #     self.driver.delete_all_cookies()
+    #     self.driver.execute_script("window.localStorage.clear();")
 
     # def tc_11_logout(self):
     #     print("\n[TC-11] 로그아웃 테스트")
@@ -607,35 +607,35 @@
 
 
 # =================================================================
-if __name__ == "__main__":
-    runner = DevFlowTestRunner()
+# if __name__ == "__main__":
+#     runner = DevFlowTestRunner()
     
-    target_tcs = [
-        "tc_01_signup",
-        "tc_02_signup_duplicate",
-        "tc_03_password_fail",
-        "tc_04_login",
-        "tc_05_profile",
-        "tc_06_teamfeild",  
-        "tc_07_projectfeild",
-        "tc_08_sprint",
-        "tc_09_issue",
-        "tc_10_kanbanboard",
-        "tc_11_logout",
+#     target_tcs = [
+#         "tc_01_signup",
+#         "tc_02_signup_duplicate",
+#         "tc_03_password_fail",
+#         "tc_04_login",
+#         "tc_05_profile",
+#         "tc_06_teamfeild",  
+#         "tc_07_projectfeild",
+#         "tc_08_sprint",
+#         "tc_09_issue",
+#         "tc_10_kanbanboard",
+#         "tc_11_logout",
 
 
 
-    ]
+#     ]
 
-    try:
-        for tc_name in target_tcs:
-            if hasattr(runner, tc_name):
-                print(f"\n▶️  {tc_name} 실행 중...")
-                getattr(runner, tc_name)() # 함수 실행
-                print(f"✅ {tc_name} 완료\n")
-            else:
-                print(f"⚠️  경고: {tc_name} 함수가 없습니다.")
-    except Exception as e:
-        print(f"\n❌ 에러 발생: {e}")
-    finally:
-        runner.teardown()
+#     try:
+#         for tc_name in target_tcs:
+#             if hasattr(runner, tc_name):
+#                 print(f"\n▶️  {tc_name} 실행 중...")
+#                 getattr(runner, tc_name)() # 함수 실행
+#                 print(f"✅ {tc_name} 완료\n")
+#             else:
+#                 print(f"⚠️  경고: {tc_name} 함수가 없습니다.")
+#     except Exception as e:
+#         print(f"\n❌ 에러 발생: {e}")
+#     finally:
+#         runner.teardown()
