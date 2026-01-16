@@ -10,12 +10,12 @@
 
 
 ## 🎥 Demo Preview
-### TC_05 프로필 수정 
-![alt text](<media/녹음 2026-01-16 203204.gif>)
+### TC_04 로그인 테스트 
+![alt text](media/tc4로그인테스트.gif)
+### TC_06 팀 생성 테스트
+![alt text](media/tc6팀생성.gif)
 ### TC
 ![TC](/media/seleniumtc.png)
-### 전체 TC01~11 
-<video controls src="media/녹음 2026-01-16 200357.mp4" title="Title"></video>
 
 ## 🏗️ Project Structure
 
