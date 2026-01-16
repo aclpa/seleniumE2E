@@ -3,6 +3,9 @@ from src.pages.login_page import LoginPage
 from src.pages.dashboard_page import DashboardPage
 from src.pages.project_page import ProjectPage
 from src.config.config import Config
+from src.pages.team_page import TeamPage
+from src.pages.sprint_page import SprintPage   
+from src.pages.issue_page import issuePage
 
 def test_create_team(driver, fake): # tc_06
     print("\n[TC-06] 팀 생성 테스트")
@@ -16,8 +19,8 @@ def test_create_team(driver, fake): # tc_06
     dashboard.go_to_teams()
     
 
-    # 3. 팀 생성 수행 (ProjectPage 담당)
-    team_page = ProjectPage(driver)
+    # 3. 팀 생성 수행 (TeamPage 담당)
+    team_page = TeamPage(driver)
 
     # Faker로 랜덤 팀 이름 생성 (중복 방지)
     random_team_name = fake.pystr(min_chars=4, max_chars=6)
@@ -64,16 +67,39 @@ def test_create_sprint(driver, fake): # tc_08
     # 2. 'Projects' 메뉴로 이동 (DashboardPage 담당)
     dashboard = DashboardPage(driver)
     dashboard.go_to_sprints() 
-    
-    # 3. 스프린트 생성 수행 (ProjectPage 담당)
-    project_page = ProjectPage(driver)
+
+    # 3. 스프린트 생성 수행 (SprintPage 담당)
+    sprint_page = SprintPage(driver)
 
     # Faker로 랜덤 스프린트 이름 생성 (중복 방지)
     random_sprint_name = fake.pystr(min_chars=4, max_chars=6)
-    project_page.create_sprint(random_sprint_name)
+    sprint_page.create_sprint(random_sprint_name)
     
     
     # 4. 검증
-    assert project_page.is_text_visible(random_sprint_name)
-
+    assert sprint_page.is_text_visible(random_sprint_name)
     print(f"✅ 스프린트 생성 확인 완료: {random_sprint_name}")
+
+
+def test_create_issue(driver, fake): # tc_09
+    print("\n[TC-09] 이슈 생성 테스트")
+    
+    # 1. 로그인
+    login_page = LoginPage(driver)
+    login_page.main_login(Config.TEST_EMAIL, Config.TEST_PASSWORD)
+
+    # 2. 'Issues' 메뉴로 이동 (DashboardPage 담당)
+    dashboard = DashboardPage(driver)
+    dashboard.go_to_issues() 
+    
+    # 3. 이슈 생성 수행 (ProjectPage 담당)
+    issue_page = issuePage(driver)
+
+    # Faker로 랜덤 이슈 제목 생성 (중복 방지)
+    random_issue_title = fake.sentence(nb_words=4)
+    issue_page.create_issue(random_issue_title)
+    
+    # 4. 검증
+    assert issue_page.is_text_visible(random_issue_title)
+
+    print(f"✅ 이슈 생성 확인 완료: {random_issue_title}")
