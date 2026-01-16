@@ -4,7 +4,6 @@ from src.pages.profile_page import ProfilePage
 from src.pages.dashboard_page import DashboardPage
 from src.config.config import Config
 from src.pages.base_page import BasePage as base_page
-import time
 
 def test_profile_update(driver, fake): # tc_05
     print("\n[TC-05] 프로필 수정 테스트")

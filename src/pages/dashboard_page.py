@@ -29,16 +29,16 @@ class DashboardPage(BasePage):
         self.click(self.MENU_LOGOUT)
         
     def go_to_projects(self):
-        self.click(self.MENU_PROJECTS)# 프로젝츠 메뉴 클릭
+        self.click(self.MENU_PROJECTS)# 프로젝트 메뉴 클릭
 
     def go_to_teams(self):
-        self.click(self.MENU_TEAMS)# 팀즈 메뉴 클릭
+        self.click(self.MENU_TEAMS)# 팀 메뉴 클릭
         
     def go_to_sprints(self):
         self.click(self.MENU_SPRINTS)# 스프린트 메뉴 클릭
 
     def go_to_issues(self):
-        self.click(self.MENU_ISSUES)# 이슈즈 메뉴 클릭
+        self.click(self.MENU_ISSUES)# 이슈 메뉴 클릭
 
     def go_to_kanban(self):
         self.click(self.MENU_KANBAN)# 칸반 메뉴 클릭

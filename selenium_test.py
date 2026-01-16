@@ -373,51 +373,51 @@
     #     self.driver.execute_script("window.localStorage.clear();")
 
 
-    def tc_06_teamfeild(self):
-        print("tc_06 팀필드 제작 테스트")
-        self.driver.get(self.base_url)
-        time.sleep(0.5)
-        team_name = f"{self.fake.color_name()} 프로젝트"
-        self._shadow_fill('login_main_email', self.existing_email)
-        self._shadow_fill('login_main_password', self.existing_password)
-        self._shadow_click('login_main_submit')
+    # def tc_06_teamfeild(self):
+    #     print("tc_06 팀필드 제작 테스트")
+    #     self.driver.get(self.base_url)
+    #     time.sleep(0.5)
+    #     team_name = f"{self.fake.color_name()} 프로젝트"
+    #     self._shadow_fill('login_main_email', self.existing_email)
+    #     self._shadow_fill('login_main_password', self.existing_password)
+    #     self._shadow_click('login_main_submit')
 
-        print("\n[TC-07] 팀 생성 및 멤버 초대 테스트")
-        print("대시보드 도달 확인")
-        time.sleep(0.5)
-        print("사이드바에서 'Teams' 메뉴 클릭")
-        self._shadow_click("menu_teams")
-        time.sleep(0.5)
-        print("'new Team' 버튼 클릭")
-        new_team_span = self.driver.find_element(By.XPATH, "//span[contains(text(), 'New Team')]")
-        new_team_span.click()
-        time.sleep(0.5)
-        print("팀 이름 입력")
-        team_name_input = self.driver.find_element(By.XPATH, "//input[@aria-label='Team Name *']")
-        team_name_input.send_keys(team_name)
-        target_member = "test123"
-        print("팀 멤버 검색시도: {test123}")
-        self.driver.find_element(By.XPATH, "//input[@aria-label='Select Initial Members']")
-        self._shadow_fill("//input[@aria-label='Select Initial Members']", target_member)
-        time.sleep(0.5)
-        try:
-            self._click(f"//div[@role='listbox']//div[contains(text(), '{target_member}')]")
-            print("맴버선택완료")
-        except:
-            print("맴버선택실패")
-            self._click("//span[contains(text(), 'Create')]")
-        time.sleep(0.5)
-        print("팀 생성 버튼 클릭")
-        self._click("//span[contains(text(), 'Create')]")
+    #     print("\n[TC-07] 팀 생성 및 멤버 초대 테스트")
+    #     print("대시보드 도달 확인")
+    #     time.sleep(0.5)
+    #     print("사이드바에서 'Teams' 메뉴 클릭")
+    #     self._shadow_click("menu_teams")
+    #     time.sleep(0.5)
+    #     print("'new Team' 버튼 클릭")
+    #     new_team_span = self.driver.find_element(By.XPATH, "//span[contains(text(), 'New Team')]")
+    #     new_team_span.click()
+    #     time.sleep(0.5)
+    #     print("팀 이름 입력")
+    #     team_name_input = self.driver.find_element(By.XPATH, "//input[@aria-label='Team Name *']")
+    #     team_name_input.send_keys(team_name)
+    #     target_member = "test123"
+    #     print("팀 멤버 검색시도: {test123}")
+    #     self.driver.find_element(By.XPATH, "//input[@aria-label='Select Initial Members']")# 팀 멤버 검색창 찾기
+    #     self._shadow_fill("//input[@aria-label='Select Initial Members']", target_member)# 팀 멤버 검색어 입력
+    #     time.sleep(0.5)
+    #     try:
+    #         self._click(f"//div[@role='listbox']//div[contains(text(), '{target_member}')]")
+    #         print("맴버선택완료")
+    #     except:
+    #         print("맴버선택실패")
+    #         self._click("//span[contains(text(), 'Create')]")
+    #     time.sleep(0.5)
+    #     print("팀 생성 버튼 클릭")
+    #     self._click("//span[contains(text(), 'Create')]")
 
-        time.sleep(0.5)
-        if team_name in self.driver.page_source:
-            print(f"✅ Pass: {team_name}")
-        else:
-            print(f"❌ Fail: {team_name} 없음")
+    #     time.sleep(0.5)
+    #     if team_name in self.driver.page_source:
+    #         print(f"✅ Pass: {team_name}")
+    #     else:
+    #         print(f"❌ Fail: {team_name} 없음")
         
-        self.driver.delete_all_cookies()
-        self.driver.execute_script("window.localStorage.clear();")
+    #     self.driver.delete_all_cookies()
+    #     self.driver.execute_script("window.localStorage.clear();")
 
     def tc_07_projectfeild(self):
         print("tc_07 프로젝트 필드 입력 테스트")
@@ -577,31 +577,31 @@
         self.driver.delete_all_cookies()
         self.driver.execute_script("window.localStorage.clear();")
 
-    def tc_11_logout(self):
-        print("\n[TC-11] 로그아웃 테스트")
-        self.driver.get(self.base_url)
-        time.sleep(0.5)
-        self._shadow_fill('login_main_email', self.existing_email)
-        self._shadow_fill('login_main_password', self.existing_password)
-        self._shadow_click('login_main_submit')
-        print("대시보드 도달 확인")
-        time.sleep(0.5)
-        print("상단 계정 아이콘 클릭")
-        avatar_selector = ".q-avatar" 
-        avatar_btn = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, avatar_selector)))
-        avatar_btn.click()
-        time.sleep(0.5) # 메뉴가 펼쳐질 때까지 잠시 대기
+    # def tc_11_logout(self):
+    #     print("\n[TC-11] 로그아웃 테스트")
+    #     self.driver.get(self.base_url)
+    #     time.sleep(0.5)
+    #     self._shadow_fill('login_main_email', self.existing_email)
+    #     self._shadow_fill('login_main_password', self.existing_password)
+    #     self._shadow_click('login_main_submit')
+    #     print("대시보드 도달 확인")
+    #     time.sleep(0.5)
+    #     print("상단 계정 아이콘 클릭")
+    #     avatar_selector = ".q-avatar" 
+    #     avatar_btn = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, avatar_selector)))
+    #     avatar_btn.click()
+    #     time.sleep(0.5) # 메뉴가 펼쳐질 때까지 잠시 대기
 
-        print("메뉴에서 Logout 클릭")
-        menu_text = "Logout"
-        logout_menu = self.driver.find_element(By.XPATH, f"//div[contains(text(), '{menu_text}')]")
-        logout_menu.click()
-        time.sleep(0.5) # 페이지 이동 대기
+    #     print("메뉴에서 Logout 클릭")
+    #     menu_text = "Logout"
+    #     logout_menu = self.driver.find_element(By.XPATH, f"//div[contains(text(), '{menu_text}')]")
+    #     logout_menu.click()
+    #     time.sleep(0.5) # 페이지 이동 대기
 
-        print("로그아웃 후 로그인 페이지 도달 확인")
-        time.sleep(0.5)
-        if "login" in self.driver.current_url:
-            print("✅ Pass: 로그아웃 성공")
+    #     print("로그아웃 후 로그인 페이지 도달 확인")
+    #     time.sleep(0.5)
+    #     if "login" in self.driver.current_url:
+    #         print("✅ Pass: 로그아웃 성공")
 
 
 

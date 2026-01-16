@@ -1,7 +1,7 @@
 # pages/login_page.py
 from src.pages.base_page import BasePage
 from src.config.config import Config
-import time
+from selenium.webdriver.support import expected_conditions as EC
 
 class LoginPage(BasePage):
     MAIN_LOGIN = "//input[@aria-label='이메일' or @type='email']" # 메인 로그인 이메일 입력필드
@@ -31,8 +31,6 @@ class LoginPage(BasePage):
     LOGIN_PW = ["ak-flow-executor","ak-stage-password","input[type='password']"] # 로그인 비밀번호 입력필드
 
     BTN_LOGIN = ["ak-flow-executor", "ak-stage-password", "button[type='submit']"] # 로그인 비밀번호 로그인 버튼
-
-   
 
     signup_error = ["ak-flow-executor", "ak-stage-access-denied", "ak-empty-state[header='요청이 거부되었습니다.']"] # 회원가입 에러 메시지
 
@@ -81,7 +79,7 @@ class LoginPage(BasePage):
 
 
     def signup_error_text(self):
-        time.sleep(0.5)
+        element = self.wait.until(lambda d: self.get_shadow_element(self.signup_error))
         try:
             # BasePage의 get_shadow_element 기능 활용
             element = self.get_shadow_element(self.signup_error)
@@ -93,7 +91,7 @@ class LoginPage(BasePage):
             return ""
         
     def login_error_text(self):
-        time.sleep(0.5)
+        element = self.wait.until(lambda d: self.get_shadow_element(self.login_error))
         try:
             # BasePage의 get_shadow_element 기능 활용
             element = self.get_shadow_element(self.login_error)

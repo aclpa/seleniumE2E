@@ -2,7 +2,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from src.pages.dashboard_page import DashboardPage
-import time
+
 
 class ProfilePage(DashboardPage):
     # 로케이터
@@ -16,7 +16,7 @@ class ProfilePage(DashboardPage):
         """이름과 전화번호를 수정하고 저장"""
         # 1. Edit Profile 탭 클릭
         self.click(self.BTN_EDIT_PROFILE)
-        time.sleep(0.5) # 탭 전환 대기
+
 
         # 2. 전화번호 입력 (기존 값 지우고 입력)
         phone_elem = self.driver.find_element(*self.INPUT_PHONE)
