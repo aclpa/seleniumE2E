@@ -20,12 +20,12 @@ class SprintPage(BasePage):
         self.click(self.BTN_CREATE_SPRINT)
 
         # 2. 스프린트 이름 입력
-        self.click(self.sprint_project) # 프로젝트 선택 필드 클릭 대기
+        self.click_js(self.sprint_project) # 프로젝트 선택 필드 클릭 대기
         self.wait.until(EC.visibility_of_element_located(self.sprint_project_select))
-        self.click(self.sprint_project_select) # 프로젝트 선택
+        self.click_js(self.sprint_project_select) # 프로젝트 선택
         self.send_keys(self.INPUT_SPRINT_NAME, sprint_name) # 스프린트 이름 입력
-        self.click(self.sprint_status) # 상태 선택 필드 클릭
+        self.click_js(self.sprint_status) # 상태 선택 필드 클릭
         self.wait.until(EC.visibility_of_element_located(self.sprint_status_select))
-        self.click(self.sprint_status_select) # 상태 선택
+        self.click_js(self.sprint_status_select) # 상태 선택
         # 3. 저장/확인 버튼 클릭
-        self.click(self.BTN_CREATE_SPRINT_SUBMIT)
+        self.click_js(self.BTN_CREATE_SPRINT_SUBMIT)
