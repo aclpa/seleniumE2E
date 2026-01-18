@@ -23,15 +23,26 @@ def api_client():
 @pytest.fixture(scope="function")
 def new_team(api_client, fake):
     t_name = f"Team_{fake.bothify(text='????')}"
-    return api_client.create_team(t_name)
+    print(f"\n🏢 [Setup] 팀 생성 중: {t_name}") # 로그 추가
+    team = api_client.create_team(t_name)
+    
+    yield team # 여기서 테스트로 데이터를 넘겨줌
+    
+    # yield 뒷부분은 테스트가 끝난 후 실행됩니다 (Teardown)
+    print(f"🗑️ [Teardown] 팀 삭제 등 뒷정리 가능 (ID: {team['id']})")
+
 
 @pytest.fixture(scope="function")
 def new_project(api_client, fake, new_team):
     p_name = f"AutoProj_{fake.lexify(text='????')}"
     p_key = fake.lexify(text='???').upper()
     
-    # new_team['id']를 인자로 넘겨줍니다.
-    return api_client.create_project(name=p_name, key=p_key, team_id=new_team['id'])
+    print(f"🏗️ [Setup] 프로젝트 생성 중: {p_name}") # 로그 추가
+    project = api_client.create_project(name=p_name, key=p_key, team_id=new_team['id'])
+    
+    yield project
+    
+    print(f"🗑️ [Teardown] 프로젝트 정리 가능")
 
 
 
