@@ -12,10 +12,21 @@
 ![alt text](media/tc4로그인테스트.gif)
 ### TC_06 팀 생성 테스트
 ![alt text](media/tc6팀생성.gif)
-### locust 차트
-![alt text](<media/locust 차트.png>)
 ### TC
 ![TC](/media/seleniumtc.png)
+
+
+## 부하 테스트 결과 분석
+### locust 차트
+![alt text](<media/locust 차트.png>)
+
+- 현상: 동시 접속자 수가 증가함에 따라 응답 시간(Response Time)이 선형적으로 증가하지 않고, 기하급수적으로 폭발함.
+
+- 임계점(Breakpoint): 그래프 앞부분 약 50~100명 구간부터 응답 시간이 튀기 시작함. 
+
+- 장애 상황: 접속자 500명 도달 시, 최대 응답 지연이 **270초(4.5분)**까지 발생하며 서비스 불능 상태(Unresponsive)에 빠짐.
+
+- 결론: 현재 서버 스펙 및 설정으로는 동시 접속자 50명 수준이 안정적인 최대 허용 범위임.
 
 ## 🏗️ Project Structure
 
