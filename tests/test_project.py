@@ -58,16 +58,14 @@ def test_create_project(driver, fake): #tc_07
     print(f"✅ 프로젝트 생성 확인 완료: {random_project_name} ({random_project_key})")
 
 
-def test_create_sprint(driver, fake,new_project): # <--- new_project 픽스처 주입됨
+def test_create_sprint(driver, fake,new_project): # tc_08
     print("\n[TC-08] 스프린트 생성 테스트 (Hybrid Mode)")
     
     # 1. 로그인 (UI 로그인은 여전히 필요, 세션 유지를 위해)
     login_page = LoginPage(driver)
     login_page.main_login(Config.TEST_EMAIL, Config.TEST_PASSWORD)
 
-    # 2. [Hybrid] API가 만든 프로젝트 페이지로 '바로 이동'
-    # 프론트엔드 라우트 규칙: /projects/{id} 라고 가정 (실제 실행 시 URL 확인 필요)
-
+    # 2. 'Sprints' 메뉴로 이동 (DashboardPage 담당)
     dashboard = DashboardPage(driver)
     dashboard.go_to_sprints()
     
@@ -85,7 +83,7 @@ def test_create_sprint(driver, fake,new_project): # <--- new_project 픽스처 �
     print(f"✅ 스프린트 생성 확인 완료: {random_sprint_name}")
 
 
-def test_create_issue(driver, fake): # tc_09
+def test_create_issue(driver, fake, new_project): # tc_09
     print("\n[TC-09] 이슈 생성 테스트")
     
     # 1. 로그인
@@ -101,7 +99,8 @@ def test_create_issue(driver, fake): # tc_09
 
     # Faker로 랜덤 이슈 제목 생성 (중복 방지)
     random_issue_title = fake.sentence(nb_words=4)
-    issue_page.create_issue(random_issue_title)
+    target_project_name = new_project['name']
+    issue_page.create_issue(random_issue_title, project_name=target_project_name)
     
     # 4. 검증
     assert issue_page.is_text_visible(random_issue_title)
