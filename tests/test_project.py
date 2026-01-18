@@ -32,7 +32,7 @@ def test_create_team(driver, fake): # tc_06
     assert team_page.is_text_visible(random_team_name)
     print(f"✅ 팀 생성 확인 완료: {random_team_name}")
 
-def test_create_project(driver, fake): #tc_07
+def test_create_project(driver, fake,new_team): #tc_07
     print("\n[TC-07] 프로젝트 생성 테스트")
     
     # 1. 로그인
@@ -49,7 +49,8 @@ def test_create_project(driver, fake): #tc_07
     # Faker로 랜덤 프로젝트 이름/키 생성 (중복 방지)
     random_project_name = fake.pystr(min_chars=4, max_chars=6)
     random_project_key = random_project_name.upper()
-    project_page.create_project(random_project_name, random_project_key)
+    target_team_name = new_team['name']
+    project_page.create_project(random_project_name, random_project_key, team_name=target_team_name)
     
     
     # 4. 검증
@@ -75,7 +76,6 @@ def test_create_sprint(driver, fake,new_project): # tc_08
     # UI 상에서 스프린트 생성 버튼 클릭 및 폼 입력
     random_sprint_name = fake.pystr(min_chars=4, max_chars=6)
     target_project_name = new_project['name']
-
     sprint_page.create_sprint(random_sprint_name, project_name=target_project_name)
     
     # 5. 검증
