@@ -9,7 +9,7 @@ class ProjectPage(BasePage):
     INPUT_PROJECT_KEY = (By.XPATH, "//input[@aria-label='프로젝트 키 *']") # 프로젝트 키(ID) 입력
     INPUT_PROJECT_NAME = (By.XPATH, "//input[@aria-label='프로젝트 이름 *']") # 프로젝트 이름 입력
     project_team = (By.XPATH, "//div[contains(@class, 'q-field__control') and .//div[contains(., 'Team *')]]") # 프로젝트 팀 선택 필드
-    project_team_select = (By.XPATH, "//div[@role='option']//span[contains(text(), 'test')]") # 프로젝트 팀 선택 옵션
+    project_team_select = (By.XPATH, "//div[@role='option']") # 프로젝트 팀 선택 옵션
     BTN_CREATE_PROJECT_SUBMIT = (By.XPATH, "//span[contains(text(), 'Create')]") # 프로젝트 생성 확인 버튼
     
         
