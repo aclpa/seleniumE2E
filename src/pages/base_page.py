@@ -143,4 +143,12 @@ class BasePage:
                .release()\
                .perform()
         
+    def get_current_url(self):
+        """
+        현재 브라우저의 URL을 반환합니다.
+        
+        """
+        self.wait.until(lambda d: d.current_url)
+        return self.driver.current_url
+        
 
