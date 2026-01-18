@@ -102,3 +102,19 @@ class APIClient:
     def delete_team(self, team_id):
         url = f"{self.API_URL}/teams/{team_id}"
         return self.session.delete(url)
+    
+    # src/utils/api_client.py 파일의 기존 클래스 안에 추가하세요
+
+    def get_all_teams(self):
+        """모든 팀 목록을 가져옵니다"""
+        if not self.token:
+            self.login()
+            
+        # 팀 목록 조회 API 호출 (GET)
+        res = self.session.get(f"{self.API_URL}/teams/")
+        
+        if res.status_code != 200:
+             print(f"⚠️ 팀 목록 조회 실패: {res.text}")
+             return []
+             
+        return res.json()
