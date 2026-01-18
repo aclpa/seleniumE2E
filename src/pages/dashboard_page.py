@@ -27,6 +27,7 @@ class DashboardPage(BasePage):
         print("로그아웃 시도 중...")
         self.click(self.AVATAR_ICON)
         self.click(self.MENU_LOGOUT)
+        self.wait.until(lambda d: "auth/login" in self.get_current_url())
         
     def go_to_projects(self):
         self.click(self.MENU_PROJECTS)# 프로젝트 메뉴 클릭

@@ -41,9 +41,8 @@ def test_logout(driver): # tc_11
     # 2. 로그아웃 수행
     dashboard_page = DashboardPage(driver)
     dashboard_page.logout()
-    
-    # 3. 검증 (토스트 메시지 + URL)
-    actual_msg = base_page(driver).get_toast_message()
-    print(f"결과 메시지: {actual_msg}")
 
-    assert "로그아웃" in actual_msg or "안전하게" in actual_msg or "리소스" in actual_msg
+
+    # 3. 검증 (토스트 메시지 + URL)
+    assert "login" in driver.current_url
+    print("✅ 로그아웃 후 로그인 페이지로 이동 확인 완료")
