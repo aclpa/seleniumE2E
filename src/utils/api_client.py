@@ -64,3 +64,28 @@ class APIClient:
         data = res.json()
         print(f"🏗️ [API] 프로젝트 생성 완료: {data['name']} (ID: {data['id']})")
         return data
+
+    def create_issue(self, project_id, title):  
+        """
+        API로 이슈를 생성합니다.
+        :param project_id: 이슈가 속할 프로젝트 ID (필수)
+        :param title: 이슈 제목
+        :param sprint_id: (선택) 스프린트 ID
+        """
+        if not self.token:
+            self.login()
+        
+        payload = {
+            "project_id": project_id,
+            "title": title,
+            "type": "task",
+            "priority": "medium",
+            "status": "todo"
+        }
+
+        response = requests.post(f"{self.BASE_URL}/issues", json=payload, headers=self.headers)
+
+        if response.status_code != 201:
+            raise Exception(f"이슈 생성 실패: {response.text}")
+            
+        return response.json()
