@@ -2,11 +2,12 @@ import requests
 from src.config.config import Config
 
 class APIClient:
-    BASE_URL = "http://localhost:8000/api/v1"
 
     def __init__(self):
         self.token = None
         self.headers = {}
+        self.API_URL = Config.API_URL
+        self.session = requests.Session()
 
     def login(self):
         """관리자 계정으로 API 로그인"""
@@ -15,7 +16,7 @@ class APIClient:
             "password": Config.TEST_PASSWORD
         }
         # JSON Body로 로그인 요청
-        response = requests.post(f"{self.BASE_URL}/auth/login", json=payload)
+        response = requests.post(f"{self.API_URL}/auth/login", json=payload)
         
         if response.status_code != 200:
             raise Exception(f"API 로그인 실패: {response.text}")
@@ -23,6 +24,21 @@ class APIClient:
         self.token = response.json()["access_token"]
         self.headers = {"Authorization": f"Bearer {self.token}"}
         print(f"🔑 [API] 로그인 성공")
+
+        response = self.session.post(f"{self.API_URL}/auth/login", json=payload)
+        
+        if response.status_code != 200:
+            raise Exception(f"로그인 실패: {response.text}")
+
+        # 2. 토큰 추출 
+        token = response.json().get('access_token') 
+        
+        # 3. 세션 헤더에 토큰 설정
+        self.session.headers.update({
+            "Authorization": f"Bearer {token}"
+        })
+        
+        print(f"🔑 [API] 로그인 성공 (토큰 획득)")
 
     def create_team(self, name):
         """[필수] 팀 생성 메서드"""
@@ -34,7 +50,7 @@ class APIClient:
             "description": "Selenium Test Team"
         }
         # 팀 생성 요청
-        res = requests.post(f"{self.BASE_URL}/teams/", json=payload, headers=self.headers)
+        res = requests.post(f"{self.API_URL}/teams/", json=payload, headers=self.headers)
         
         if res.status_code != 201:
             raise Exception(f"팀 생성 실패: {res.text}")
@@ -56,7 +72,7 @@ class APIClient:
         }
         
         # 프로젝트 생성 요청
-        res = requests.post(f"{self.BASE_URL}/projects/", json=payload, headers=self.headers)
+        res = requests.post(f"{self.API_URL}/projects/", json=payload, headers=self.headers)
         
         if res.status_code not in [200, 201]:
              raise Exception(f"프로젝트 생성 실패: {res.text}")
@@ -83,9 +99,34 @@ class APIClient:
             "status": "todo"
         }
 
-        response = requests.post(f"{self.BASE_URL}/issues", json=payload, headers=self.headers)
+        response = requests.post(f"{self.API_URL}/issues", json=payload, headers=self.headers)
 
         if response.status_code != 201:
             raise Exception(f"이슈 생성 실패: {response.text}")
             
         return response.json()
+
+
+    def delete_issue(self, issue_id):
+        # 이제 self.session을 사용할 수 있습니다.
+        url = f"{self.API_URL}/issues/{issue_id}"
+        response = self.session.delete(url) # ✅ 에러 해결
+        return response
+
+    def delete_project(self, project_id):
+        """프로젝트 삭제"""
+        url = f"{self.API_URL}/projects/{project_id}"
+        response = self.session.delete(url)
+        
+        if response.status_code not in [200, 204]:
+            raise Exception(f"프로젝트 삭제 실패: {response.text}")
+        return response
+
+    def delete_team(self, team_id):
+        """팀 삭제"""
+        url = f"{self.API_URL}/teams/{team_id}"
+        response = self.session.delete(url)
+        
+        if response.status_code not in [200, 204]:
+            raise Exception(f"팀 삭제 실패: {response.text}")
+        return response
