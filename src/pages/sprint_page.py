@@ -41,8 +41,6 @@ class SprintPage(BasePage):
                 # 이름 지정 안 했으면 그냥 첫 번째꺼 클릭
                 self.driver.find_elements(*self.sprint_project_select)[0].click()     
 
-            self.wait.until(EC.invisibility_of_element_located(self.OPTION_PROJECT_ITEMS))
-
         except Exception as e:
             print(f"ℹ️ 프로젝트 선택 패스 (사유: {e})")
 
