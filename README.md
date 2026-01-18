@@ -12,6 +12,8 @@
 ![alt text](media/tc4로그인테스트.gif)
 ### TC_06 팀 생성 테스트
 ![alt text](media/tc6팀생성.gif)
+### locust 차트
+![alt text](<media/locust 차트.png>)
 ### TC
 ![TC](/media/seleniumtc.png)
 
