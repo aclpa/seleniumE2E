@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  selenium-chrome:
+    image: selenium/standalone-chrome:latest
+    ports:
+      - "4444:4444"
+      - "7900:7900" # (VNC 확인용 포트 추가 추천)
+    shm_size: "2gb"
+    networks:
+      - devflow-test
+    # ▼▼▼ [치트키] 브라우저가 'localhost'를 찾으면 내 컴퓨터로 연결해줌 ▼▼▼
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "localhost:host-gateway"
+
+  test-runner:
+    build: .
+    depends_on: 
+      - selenium-chrome
+    volumes:
+      - .:/app
+    environment:
+      # ▼▼▼ [핵심 수정] 여기를 host.docker.internal에서 localhost로 변경! ▼▼▼
+      # 이제 테스트 봇도, 프론트엔드도, Authentik도 모두 'localhost'라고 부릅니다. (주소 통일)
+      - BASE_URL=http://host.docker.internal:8080
+      - API_URL=http://host.docker.internal:8000/api/v1
+    
+    # ▼▼▼ [치트키] 파이썬 봇도 'localhost'를 찾으면 내 컴퓨터로 연결해줌 ▼▼▼
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "localhost:host-gateway"
+    
+    command: pytest -v
+    networks:
+      - devflow-test
+
+networks:
+  devflow-test:
+    driver: bridge

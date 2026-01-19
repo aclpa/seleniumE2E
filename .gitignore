@@ -12,3 +12,6 @@ config.py
 
 # 로그 파일 등
 *.log
+
+screenshots/
+*.png
