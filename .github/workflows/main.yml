@@ -33,6 +33,8 @@ jobs:
           mkdir -p src/config
           echo "import os" > src/config/config.py
           echo "class Config:" >> src/config/config.py
+          echo "    BASE_URL = 'http://localhost:8080'" >> src/config/config.py
+          echo "    API_URL = 'http://localhost:8000/api/v1'" >> src/config/config.py
           echo "    TEST_EMAIL = os.environ.get('TEST_EMAIL')" >> src/config/config.py
           echo "    TEST_PASSWORD = os.environ.get('TEST_PASSWORD')" >> src/config/config.py
           echo "    IMPLICIT_WAIT = 10" >> src/config/config.py
