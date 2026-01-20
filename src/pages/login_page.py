@@ -2,7 +2,7 @@
 from src.pages.base_page import BasePage
 from src.config.config import Config
 from selenium.webdriver.support import expected_conditions as EC
-
+import time
 
 class LoginPage(BasePage):
     MAIN_LOGIN = (
@@ -79,8 +79,8 @@ class LoginPage(BasePage):
 
     signup_error = [
         "ak-flow-executor",
-        "ak-stage-access-denied",
-        "ak-empty-state[header='요청이 거부되었습니다.']",
+        "ak-stage-prompt",
+        "p[class='pf-c-form__helper-text-icon']",
     ]  # 회원가입 에러 메시지
 
     login_error = [
@@ -89,6 +89,8 @@ class LoginPage(BasePage):
         "ak-flow-input-password > ak-form-element",
         "p.pf-c-form__helper-text",
     ]  # 로그인 에러 메시지
+
+    BTN_SUMMIT =["ak-flow-executor","ak-stage-consent","button"]
 
     def main_login(self, email, password):
         self.driver.get(Config.BASE_URL)
