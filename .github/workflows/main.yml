@@ -28,6 +28,15 @@ jobs:
         run: |
           # GitHub Actions 우분투 이미지에는 기본적으로 크롬이 설치되어 있습니다.
           # Headless 모드로 실행하기 위한 추가 설정
+      - name: Create config.py
+        run: |
+          mkdir -p src/config
+          echo "import os" > src/config/config.py
+          echo "class Config:" >> src/config/config.py
+          echo "    TEST_EMAIL = os.environ.get('TEST_EMAIL')" >> src/config/config.py
+          echo "    TEST_PASSWORD = os.environ.get('TEST_PASSWORD')" >> src/config/config.py
+          echo "    IMPLICIT_WAIT = 10" >> src/config/config.py
+          cat src/config/config.py
 
       - name: Run E2E Tests
         env:
