@@ -4,6 +4,7 @@ from src.config.config import Config
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
+
 class LoginPage(BasePage):
     MAIN_LOGIN = (
         "//input[@aria-label='이메일' or @type='email']"  # 메인 로그인 이메일 입력필드
@@ -90,7 +91,7 @@ class LoginPage(BasePage):
         "p.pf-c-form__helper-text",
     ]  # 로그인 에러 메시지
 
-    BTN_SUMMIT =["ak-flow-executor","ak-stage-consent","button"]
+    BTN_SUMMIT = ["ak-flow-executor", "ak-stage-consent", "button"]
 
     def main_login(self, email, password):
         self.driver.get(Config.BASE_URL)

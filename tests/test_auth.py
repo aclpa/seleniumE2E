@@ -42,9 +42,10 @@ def test_signup_existing_email(driver):  # tc_02
     # 3. 로직 수행
     login_page.signup(existing_email, fail_username, fail_password)
 
-    # 4. 검증 
+    # 4. 검증
     assert "erp-signup-flow" in driver.current_url
     print("중복 user name")
+
 
 def test_signup_password_mismatch(driver):  # tc_03
     print("\n[TC-03] 비밀번호 불일치 로그인 테스트")
