@@ -1,5 +1,6 @@
 # conftest.py
 import pytest
+import os
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
@@ -87,7 +88,16 @@ def new_issue(api_client, new_project, fake):
 def driver():
     print("\n🚀 [Setup] 브라우저 실행")
     options = webdriver.ChromeOptions()
-    # options.add_argument("--headless")
+    
+    # --- 이 부분이 추가되었습니다 ---
+    # GitHub Actions 환경(CI=true)일 때만 headless 모드를 자동으로 켭니다.
+    if os.environ.get('CI') == 'true':
+        options.add_argument("--headless")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--window-size=1920,1080")
+    # ------------------------------
+
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=options)
     driver.implicitly_wait(Config.IMPLICIT_WAIT)

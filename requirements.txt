@@ -1,0 +1,5 @@
+pytest
+selenium
+webdriver-manager
+faker
+pytest-html  # 결과 리포트 생성을 위해 추가 권장

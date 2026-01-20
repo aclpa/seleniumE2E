@@ -1,0 +1,46 @@
+name: ERP E2E Test CI
+
+on:
+  push:
+    branches: [ main, develop ]  # main이나 develop 브랜치에 push될 때 실행
+  pull_request:
+    branches: [ main ]         # pull request가 생성될 때 실행
+
+jobs:
+  test:
+    runs-on: ubuntu-latest  # 리눅스 환경에서 실행
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt  # 필요한 라이브러리 설치
+
+      - name: Install Chrome & WebDriver
+        run: |
+          # GitHub Actions 우분투 이미지에는 기본적으로 크롬이 설치되어 있습니다.
+          # Headless 모드로 실행하기 위한 추가 설정
+
+      - name: Run E2E Tests
+        env:
+          TEST_EMAIL: ${{ secrets.TEST_EMAIL }}       # 보안이 필요한 정보는 Secret 처리
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+        run: |
+          pytest tests/ --html=report.html --self-contained-html # 테스트 실행 및 리포트 생성
+
+      - name: Upload Test Report
+        if: always()  # 테스트 실패 여부와 상관없이 항상 실행
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-results
+          path: |
+            report.html
+            media/    # 스크린샷 폴더
