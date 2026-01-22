@@ -65,6 +65,7 @@ seleniumE2E-cleanup/
 - Language,Python 3.11+,전체 프레임워크 구현
 - Test Runner,Pytest,"테스트 실행, Fixture 관리, Assertion"
 - Web Driver,Selenium WebDriver,브라우저 제어 (Chrome)
+- postman API 사전 테스트
 - Load Test,Locust,API 부하 테스트 및 모니터링
 - HTTP Client,Requests,테스트 데이터 셋업용 API 호출
 - Data Gen,Faker,더미 데이터 생성
