@@ -17,8 +17,7 @@ class KanbanPage(BasePage):
         """
         특정 제목을 가진 카드를 'In Progress' 컬럼으로 이동
         """
-        # 🌟 핵심 변경: API가 만든 랜덤 제목을 찾기 위해 XPath를 동적으로 생성합니다.
-        # 기존: CARD_SOURCE = (By.XPATH, "//div[contains(text(), 'test')]")
+
         dynamic_card_locator = (By.XPATH, f"//div[contains(text(), '{card_title}')]")
 
         print(f"🖱️ '{card_title}' 카드를 'In Progress' 컬럼으로 이동 시도")
@@ -32,8 +31,7 @@ class KanbanPage(BasePage):
         """
         print(f"🔎 검증: '{column_name}' 컬럼에 '{card_text}'가 도착했나요?")
         try:
-            # 검증용 XPath: 컬럼(q-card) 안에 해당 텍스트가 있는지 확인
-            # (Quasar 프레임워크 구조에 맞춰 div 계층을 조금 유연하게 수정했습니다)
+
             xpath = f"//div[contains(@class, 'q-card') and .//div[contains(text(), '{column_name}')]]//div[contains(text(), '{card_text}')]"
 
             # 카드가 이동해서 렌더링될 때까지 잠시 대기
