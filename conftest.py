@@ -14,7 +14,7 @@ def fake():
     return Faker()
 
 
-# --- 추가된 부분 시작 ---
+
 @pytest.fixture(scope="session")
 def api_client():
     """테스트 세션 동안 유지되는 API 클라이언트"""
@@ -36,7 +36,7 @@ def new_team(api_client, fake):
     except Exception as e:
         print(f"   -> ⚠️ 팀 삭제 실패 (이미 지워졌거나 오류): {e}")
 
-    # yield 뒷부분은 테스트가 끝난 후 실행됩니다 (Teardown)
+    # yield 뒷부분은 테스트가 끝난 후 실행
     print(f"🗑️ [Teardown] 팀 삭제 등 뒷정리 가능 (ID: {team['id']})")
 
 
