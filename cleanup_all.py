@@ -15,7 +15,7 @@ def clean_all_test_data():
         # 1. 모든 팀 가져오기
         response_data = api.get_all_teams()
 
-        # 🌟 [수정] 응답이 딕셔너리라면 진짜 리스트(알맹이)를 꺼냄
+        
         teams = []
         if isinstance(response_data, list):
             teams = response_data
@@ -37,7 +37,7 @@ def clean_all_test_data():
 
         count = 0
         for team in teams:
-            # 안전장치: 딕셔너리가 아닌 이상한 데이터는 건너뜀
+            
             if not isinstance(team, dict):
                 continue
 
